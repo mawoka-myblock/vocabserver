@@ -1,9 +1,9 @@
 from __main__ import app
 import os
 from flask import request
-import auth
-
+from __main__ import auth
 @app.route('/api/add-list/<subject>/<classroom>/<id>', methods = ['GET', 'POST', 'DELETE'])
+@auth.login_required
 def savethings(subject, classroom, id):
     if request.method == 'GET':
         """return the information for <user_id>"""
@@ -47,6 +47,4 @@ def readlists(subject, classroom, id):
     except:
         return "Error 128596335"
 
-@app.route("/")
-def index():
-    return "here i am!"
+

@@ -1,13 +1,24 @@
 from flask import Flask, render_template, url_for, request, redirect, g, render_template_string
 from flask_sqlalchemy import SQLAlchemy
-import auth
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
 
-users = {
+
+
+app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+user = {
     "john": generate_password_hash("hello"),
     "susan": generate_password_hash("bye")
 }
+with open('data/users.json', 'w') as file:
+    json.dump(user, file)
+
+with open('data/users.json', 'r') as f:
+  users = json.loads(f)
+
 
 @auth.verify_password
 def verify_password(username, password):
@@ -16,17 +27,9 @@ def verify_password(username, password):
         return username
 
 
-import flask
+import datahandler #Has the following urls: /api/add-list/<subject>/<classroom>/<id>  and   /api/read-list/<subject>/<classroom>/<id>
 
-app = flask.Flask(__name__)
-
-app.secret_key = 'hjfzguzhnuhrgh87jzuizfhij8junhrt86zth8jz7hdzgzfu7ur8hajtdsk8hggftae76sgufgud'  # Change this!
-import datahandler
-#app.add_url_rule('/api/add-list/<subject>/<classroom>/<id>', view_func=datahandler.savethings, methods=['GET', 'POST', 'DELETE'])
-
-#app.add_url_rule('/api/read-list/<subject>/<classroom>/<id>', view_func=datahandler.readlists)
-
-
+print(users)
 
 
 if __name__ == '__main__':
