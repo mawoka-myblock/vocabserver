@@ -1,9 +1,10 @@
 from __main__ import app
 import os
 from flask import request
-
+from auth import auth
 
 @app.route('/api/add-list/<subject>/<classroom>/<id>', methods = ['GET', 'POST', 'DELETE'])
+@auth.required
 def savethings(subject, classroom, id):
     if request.method == 'GET':
         """return the information for <user_id>"""
@@ -39,6 +40,7 @@ def savethings(subject, classroom, id):
 
 
 @app.route('/api/read-list/<subject>/<classroom>/<id>')
+@auth.required
 def readlists(subject, classroom, id):
     try:
         with open(os.path.join('./data/' + classroom + '/' + subject, id + '.txt'), "r" ) as f:
