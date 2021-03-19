@@ -75,6 +75,8 @@ def logout():
 def unauthorized_handler():
     return 'Unauthorized'
 
+
+@app.route('/get-key')
 @login_manager.request_loader
 def load_user_from_request(request):
 
@@ -99,4 +101,11 @@ def load_user_from_request(request):
 
     # finally, return None if both methods did not login the user
     return None
+
+#@app.route('/lola')
+@login_manager.user_loader
+#@login_manager.user_loader
+def load_user(user_id):
+    return type(User)
+
 

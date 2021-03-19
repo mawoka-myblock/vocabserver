@@ -1,4 +1,6 @@
-from flask import Flask, render_template, url_for, request, redirect, g
+from flask import Flask, render_template, url_for, request, redirect, g, render_template_string
+from flask_sqlalchemy import SQLAlchemy
+
 import flask_login
 #import os
 #import stuff
