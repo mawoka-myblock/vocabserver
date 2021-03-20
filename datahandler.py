@@ -1,50 +1,39 @@
-from __main__ import app
 import os
-from flask import request
-from __main__ import auth
-@app.route('/api/add-list/<subject>/<classroom>/<id>', methods = ['GET', 'POST', 'DELETE'])
-@auth.login_required
-def savethings(subject, classroom, id):
-    if request.method == 'GET':
-        """return the information for <user_id>"""
+from fastapi import Form
 
-    if request.method == 'POST':
+global response
+response = "hallo"
+def save(subject, classroom, id, l1, l2):
+    try:
+        os.mkdir("./data/" + classroom)
+        os.mkdir("./data/" + classroom + "/" + subject)
+        f = open(os.path.join('./data/' + classroom + '/' + subject, id + ".txt"), "a")
+        # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
+        f.write(l1)
+        f.write(" : ")
+        f.write(l2)
+        f.write("\n")
+        f.close()
+        response = "Success"
+    except:
         try:
-            os.mkdir("./data/" + classroom)
-            os.mkdir("./data/" + classroom + "/" + subject)
             f = open(os.path.join('./data/' + classroom + '/' + subject, id + ".txt"), "a")
             # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
-            l1 = request.form['lone']
-            l2 = request.form['ltwo']
             f.write(l1)
             f.write(" : ")
             f.write(l2)
             f.write("\n")
             f.close()
-            return "Success"
+            response = "Success"
         except:
-            try:
-                f = open(os.path.join('./data/' + classroom + '/' + subject, id + ".txt"), "a")
-                # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
-                l1 = request.form['lone']
-                l2 = request.form['ltwo']
-                f.write(l1)
-                f.write(" : ")
-                f.write(l2)
-                f.write("\n")
-                f.close()
-                return "success"
-            except:
-                return "Error"
+            response = "Error"
 
 
-@app.route('/api/read-list/<subject>/<classroom>/<id>')
-def readlists(subject, classroom, id):
+def read(subject, classroom, id):
     try:
         with open(os.path.join('./data/' + classroom + '/' + subject, id + '.txt'), "r" ) as f:
             content = f.readline()
+        response = content
         return content
     except:
         return "Error 128596335"
-
-

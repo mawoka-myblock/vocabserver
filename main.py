@@ -1,37 +1,28 @@
-from flask import Flask, render_template, url_for, request, redirect, g, render_template_string
-from flask_sqlalchemy import SQLAlchemy
-from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import generate_password_hash, check_password_hash
-import json
+from typing import Optional
+from pydantic import BaseModel
+from fastapi import FastAPI, Form
+import datahandler
+
+app = FastAPI()
+
+response = datahandler.response
+class Item(BaseModel):
+    name: str
+    price: float
+    is_offer: Optional[bool] = None
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 
+@app.get("/api/read-list/{subject}/{classroom}/{id}")
+async def update_item(subject: str, classroom: str, id: str):
+     return datahandler.read(subject, classroom, id)
 
-app = Flask(__name__)
-auth = HTTPBasicAuth()
-
-lolo = {
-    "john": generate_password_hash("hello"),
-    "susan": generate_password_hash("bye")
-}
-with open('data/users.json', 'w') as file:
-    json.dump(lolo, file)
-
-with open('data/users.json', 'r') as f:
-    data = f.read()
-users = json.loads(data)
-
-
-
-@auth.verify_password
-def verify_password(username, password):
-    if username in users and \
-            check_password_hash(users.get(username), password):
-        return username
-
-
-import datahandler #Has the following urls: /api/add-list/<subject>/<classroom>/<id>  and   /api/read-list/<subject>/<classroom>/<id>
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.post("/api/add-list/{subject}/{classroom}/{id}")
+async def update_item(subject: str, classroom: str, id: str, lone: str = Form(default=None), ltwo: str = Form(default=None)):
+    datahandler.save(subject, classroom, id, lone, ltwo)
+    print(response, "lol")
+    print(datahandler.response, "Hallo")
+    return {datahandler.response}
