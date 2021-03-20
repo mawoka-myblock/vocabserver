@@ -9,15 +9,17 @@ import json
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
-user = {
+lolo = {
     "john": generate_password_hash("hello"),
     "susan": generate_password_hash("bye")
 }
 with open('data/users.json', 'w') as file:
-    json.dump(user, file)
+    json.dump(lolo, file)
 
 with open('data/users.json', 'r') as f:
-  users = json.loads(f)
+    data = f.read()
+users = json.loads(data)
+
 
 
 @auth.verify_password
@@ -29,7 +31,6 @@ def verify_password(username, password):
 
 import datahandler #Has the following urls: /api/add-list/<subject>/<classroom>/<id>  and   /api/read-list/<subject>/<classroom>/<id>
 
-print(users)
 
 
 if __name__ == '__main__':
