@@ -86,6 +86,7 @@ app.include_router(fastapi_users.get_users_router(), prefix="/users", tags=["use
 
 app.state.database = database
 
+verified_user = fastapi_users.current_user(verified=True)
 
 @app.on_event("startup")
 async def startup() -> None:
@@ -105,12 +106,17 @@ async def shutdown() -> None:
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/api/read-list/{subject}/{classroom}/{id}", tags=["vocabapi"], auth=True)
-async def update_item(subject: str, classroom: str, id: str):
+@app.get("/api/read-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
+async def update_item(subject: str, classroom: str, id: str, user: User = Depends(verified_user)):
     return datahandler.read(subject, classroom, id)
 
 
 @app.post("/api/add-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
 async def update_item(subject: str, classroom: str, id: str, lone: str = Form(default=None),
-                      ltwo: str = Form(default=None)):
+                      ltwo: str = Form(default=None), user: User = Depends(verified_user)):
     return datahandler.save(subject, classroom, id, lone, ltwo)
+
+
+@app.get('/unr')
+def index():
+    return fastapi_users.current_user
