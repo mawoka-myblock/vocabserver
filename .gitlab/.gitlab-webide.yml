@@ -1,6 +1,6 @@
 terminal:
   # This can be any image that has the necessary runtime environment for your project.
-  image: docker pull python:latest
+  image: python:latest
   before_script:
     - apt-get update
     - pip install -r requirements.txt
