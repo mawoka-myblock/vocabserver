@@ -47,9 +47,8 @@ async def index(user: User = Depends(verified_user)):
     return datahandler.getcontent()
 
 
-@app.post("/api/students/get-stats/{subject}/{id}", tags=["students"])
-async def index(subject: str, classroom: str, id: str, user: User = Depends(verified_user),
-                lone: str = Form(default=None), ltwo: str = Form(default=None),
+@app.post("/api/students/get-stats/{subject}", tags=["students"])
+async def index(subject: str, user: User = Depends(verified_user),
+                ltwo: str = Form(default=None),
                 hdiw: str = Form(default=None)):  # hdiw = how did it work
-    students.saveresult(user.id, lone, ltwo, hdiw, subject, id)
-
+    return students.saveresult(user.id, ltwo, hdiw, subject)
