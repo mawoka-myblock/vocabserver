@@ -4,8 +4,9 @@ import auth
 import datahandler
 import students
 from auth import User, SECRET
+from docs import tags_metadata
 
-app = FastAPI()
+app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
 response = datahandler.response
 
@@ -25,9 +26,6 @@ app.include_router(fastapi_users.get_users_router(), prefix="/users", tags=["use
 verified_user = fastapi_users.current_user(verified=True)
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
 
 
 @app.get("/api/vocab/read-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
@@ -47,8 +45,16 @@ async def index(user: User = Depends(verified_user)):
     return datahandler.getcontent()
 
 
-@app.post("/api/students/get-stats/{subject}", tags=["students"])
+@app.post("/api/students/write-stats/{subject}", tags=["students"])
 async def index(subject: str, user: User = Depends(verified_user),
                 ltwo: str = Form(default=None),
                 hdiw: str = Form(default=None)):  # hdiw = how did it work
     return students.saveresult(user.id, ltwo, hdiw, subject)
+
+@app.get("/api/students/get-stats/{subject}", tags=["students"])
+async def index(subject: str, user: User = Depends(verified_user)):
+    return students.readresult(user.id, subject)
+@app.delete("/api/students/delete-stats/{subject}", tags=["students"])
+async def delete(subject: str, user: User = Depends(verified_user)):
+    return students.delete(user.id, subject)
+

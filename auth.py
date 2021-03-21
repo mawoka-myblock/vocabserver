@@ -1,8 +1,5 @@
 import databases
-import json
 import os
-import requests
-import smtplib
 import sqlalchemy
 
 from fastapi_users.authentication import JWTAuthentication
