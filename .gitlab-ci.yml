@@ -30,7 +30,7 @@ test:
 
 run:
   script:
-    - uvicorn main:app --reload
+    - venv/bin/uvicorn main:app --reload
   artifacts:
     paths:
       - dist/*.whl
