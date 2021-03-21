@@ -1,13 +1,18 @@
-
 import databases
+import json
+import os
+import requests
+import smtplib
 import sqlalchemy
-from fastapi import FastAPI, Request
-from fastapi_users import FastAPIUsers, models
+
 from fastapi_users.authentication import JWTAuthentication
+from fastapi import FastAPI, Request
+from fastapi_users import models, FastAPIUsers
 from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
+from pydantic import validator
 
 app = FastAPI()
-DATABASE_URL = "sqlite:///test.db"
+DATABASE_URL = "sqlite:///users.db"
 SECRET = "jkhgbvhfmgdjfjzgnhzvfzdcgjbnhzgrtg7hjjkt8hzoiig4uikzuhj78mio8z"
 metadata = sqlalchemy.MetaData()
 database = databases.Database(DATABASE_URL)
@@ -15,12 +20,24 @@ database = databases.Database(DATABASE_URL)
 
 class User(models.BaseUser):
     pass
+
+
 class UserCreate(models.BaseUserCreate):
-    pass
+    @validator('password')
+    def valid_password(cls, v: str):
+        if len(v) < 6:
+            raise ValueError('Password should be at least 6 characters')
+        return v
+
+
 class UserUpdate(User, models.BaseUserUpdate):
     pass
+
+
 class UserDB(User, models.BaseUserDB):
     pass
+
+
 class UserModel(OrmarBaseUserModel):
     class Meta:
         tablename = "users"
@@ -34,29 +51,47 @@ metadata.create_all(engine)
 user_db = OrmarUserDatabase(UserDB, UserModel)
 
 
+def verification(uid, token):
+    user = UserDB
+
+
+def sendveriemail(uid, uname, token):
+    sender = "Vocab Server <noreply@vocabserver.com"
+    payload = {f"email: {uid}"}
+
+    # token = r[]
+    url = f"http://127.0.0.1:8000/user/verify{token}/{uid}"
+    message = f"""\
+    Subject: Verify yourself, pls!
+    To: {uname}
+    From: {sender}
+    
+    
+    """
+
+    with smtplib.SMTP("smtp.mailtrap.io", 2525) as server:
+        server.login("1cba579e59e62c", "70392fdcaa0ce4")
+        server.sendmail(sender, uname, message)
+
+
+def after_verification_request(user: UserDB, token: str, request: Request):
+    print(f"Verification requested for user {user.id}. Verification token: {token}")
+    sendveriemail(user.id, user.email, token)
+
+
 def on_after_register(user: UserDB, request: Request):
+    os.mkdir(f'data/userdata/{user.id}')
     print(f"User {user.id} has registered.")
+    payload = {f"email: {user.id}"}
+    r = requests.post("http://127.0.0.1:8000/auth/request-verify-token", data=json.dumps(payload))
+    r = json.loads(r)
+
+    sendveriemail(user.id, user.email, r)
 
 
 def on_after_forgot_password(user: UserDB, token: str, request: Request):
     print(f"User {user.id} has forgot their password. Reset token: {token}")
 
-
-def after_verification_request(user: UserDB, token: str, request: Request):
-    print(f"Verification requested for user {user.id}. Verification token: {token}")
-
-"""
-jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/auth/jwt/login")
-
-fastapi_users = FastAPIUsers(user_db, [jwt_authentication], User, UserCreate, UserUpdate, UserDB, )
-app.include_router(fastapi_users.get_auth_router(jwt_authentication), prefix="/auth/jwt", tags=["auth"])
-app.include_router(fastapi_users.get_register_router(on_after_register), prefix="/auth", tags=["auth"])
-app.include_router(fastapi_users.get_reset_password_router(SECRET, after_forgot_password=on_after_forgot_password),
-                   prefix="/auth", tags=["auth"], )
-app.include_router(fastapi_users.get_verify_router(SECRET, after_verification_request=after_verification_request),
-                   prefix="/auth", tags=["auth"])
-app.include_router(fastapi_users.get_users_router(), prefix="/users", tags=["users"])
-"""
 
 app.state.database = database
 

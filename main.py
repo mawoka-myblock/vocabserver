@@ -1,6 +1,10 @@
 from fastapi import FastAPI, Form, Depends
-import datahandler, students,auth
+
+import auth
+import datahandler
+import students
 from auth import User, SECRET
+
 app = FastAPI()
 
 response = datahandler.response
@@ -21,7 +25,6 @@ app.include_router(fastapi_users.get_users_router(), prefix="/users", tags=["use
 verified_user = fastapi_users.current_user(verified=True)
 
 
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -38,10 +41,19 @@ async def update_item(subject: str, classroom: str, id: str, lone: str = Form(de
     datahandler.save(subject, classroom, id, lone, ltwo)
     return datahandler.response
 
+
 @app.get("/api/vocab/list-list", tags=["vocabapi"])
 async def index(user: User = Depends(verified_user)):
     return datahandler.getcontent()
 
-@app.post("/api/students/get-stats")
-async def index(user: User = Depends(verified_user)):
 
+@app.post("/api/students/get-stats/{subject}/{id}", tags=["students"])
+async def index(subject: str, classroom: str, id: str, user: User = Depends(verified_user),
+                lone: str = Form(default=None), ltwo: str = Form(default=None),
+                hdiw: str = Form(default=None)):  # hdiw = how did it work
+    students.saveresult(user.id, lone, ltwo, hdiw, subject, id)
+
+@app.get("/user/verify/{token}/{uid}", tags=["auth"])
+async def index(token: str, uid: str):
+    verified_user = await fastapi_users.verify_user(non_verified_user)
+    assert verified_user.is_verified is True
