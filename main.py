@@ -53,7 +53,3 @@ async def index(subject: str, classroom: str, id: str, user: User = Depends(veri
                 hdiw: str = Form(default=None)):  # hdiw = how did it work
     students.saveresult(user.id, lone, ltwo, hdiw, subject, id)
 
-@app.get("/user/verify/{token}/{uid}", tags=["auth"])
-async def index(token: str, uid: str):
-    verified_user = await fastapi_users.verify_user(non_verified_user)
-    assert verified_user.is_verified is True

@@ -55,38 +55,13 @@ def verification(uid, token):
     user = UserDB
 
 
-def sendveriemail(uid, uname, token):
-    sender = "Vocab Server <noreply@vocabserver.com"
-    payload = {f"email: {uid}"}
-
-    # token = r[]
-    url = f"http://127.0.0.1:8000/user/verify{token}/{uid}"
-    message = f"""\
-    Subject: Verify yourself, pls!
-    To: {uname}
-    From: {sender}
-    
-    
-    """
-
-    with smtplib.SMTP("smtp.mailtrap.io", 2525) as server:
-        server.login("1cba579e59e62c", "70392fdcaa0ce4")
-        server.sendmail(sender, uname, message)
-
-
 def after_verification_request(user: UserDB, token: str, request: Request):
     print(f"Verification requested for user {user.id}. Verification token: {token}")
-    sendveriemail(user.id, user.email, token)
 
 
 def on_after_register(user: UserDB, request: Request):
     os.mkdir(f'data/userdata/{user.id}')
     print(f"User {user.id} has registered.")
-    payload = {f"email: {user.id}"}
-    r = requests.post("http://127.0.0.1:8000/auth/request-verify-token", data=json.dumps(payload))
-    r = json.loads(r)
-
-    sendveriemail(user.id, user.email, r)
 
 
 def on_after_forgot_password(user: UserDB, token: str, request: Request):
