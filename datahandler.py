@@ -35,7 +35,7 @@ def save(subject, classroom, id, l1, l2):
     try:
         os.mkdir(f"{getdatadir()}/vocab/" + classroom)
         os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
-        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ ' + id + ".json"), "w")
+        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         data = {l1: l2}
         json.dump(data, f)
         f.close()
@@ -45,11 +45,11 @@ def save(subject, classroom, id, l1, l2):
         print(response)
     except:
         try:
-            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ ' + id + ".json"), "r")
+            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
             # f = open(os.path.join('./data' + classroom, id + ".json"), "a")
             data = json.load(f)
             f.close()
-            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ ' + id + ".json"), "w")
+            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
             data.update({l1: l2})
             json.dump(data, f)
             fullpath = classroom + "/" + subject + "/" + id + ".json"
@@ -64,16 +64,14 @@ def save(subject, classroom, id, l1, l2):
 
 def read(subject, classroom, id):
     try:
-        with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject, id + '.json'), "r") as f:
-            content = f.readline()
-        response = content
-        return content
+        with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + "/" + id + '.json'), "r") as f:
+            return json.load(f)
     except:
         return "Error 128596335"
 
 
 def getcontent():
-    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "r") as f:
+    with open(os.path.join(f'./{getdatadir()}/vocab/index.json'), "r") as f:
         index = f.read()
     #index = index.strip()
     #index = index.replace("\n", ";")
