@@ -1,6 +1,7 @@
 site_name: MyDocs
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
         # Light mode
     - media: "(prefers-color-scheme: light)"
