@@ -35,27 +35,24 @@ def save(subject, classroom, id, l1, l2):
     try:
         os.mkdir(f"{getdatadir()}/vocab/" + classroom)
         os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
-        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ '+ id + ".txt"), "a")
-        # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
-        f.write(l1)
-        f.write(" : ")
-        f.write(l2)
-        f.write("\n")
+        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ ' + id + ".json"), "w")
+        data = {l1: l2}
+        json.dump(data, f)
         f.close()
-        fullpath = classroom + "/" + subject + "/" + id + ".txt"
+        fullpath = classroom + "/" + subject + "/" + id + ".json"
         savetoindex(fullpath)
         response = "Success"
         print(response)
     except:
         try:
-            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject, id + ".txt"), "a")
-            # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
-            f.write(l1)
-            f.write(" : ")
-            f.write(l2)
-            f.write("\n")
+            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ ' + id + ".json"), "r")
+            # f = open(os.path.join('./data' + classroom, id + ".json"), "a")
+            data = json.load(f)
             f.close()
-            fullpath = classroom + "/" + subject + "/" + id + ".txt"
+            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ ' + id + ".json"), "w")
+            data.update({l1: l2})
+            json.dump(data, f)
+            fullpath = classroom + "/" + subject + "/" + id + ".json"
             savetoindex(fullpath)
             response = "Success"
             print(response)
@@ -67,7 +64,7 @@ def save(subject, classroom, id, l1, l2):
 
 def read(subject, classroom, id):
     try:
-        with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject, id + '.txt'), "r") as f:
+        with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject, id + '.json'), "r") as f:
             content = f.readline()
         response = content
         return content
