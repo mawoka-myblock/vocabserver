@@ -21,7 +21,7 @@ curl -X 'POST' \
   -H 'accept: application/json' \
   -H 'Authorization: [auth token] \
   -H 'Content-Type: application/x-www-form-urlencoded' \
-  -d 'lone=[duetsches Wort]&ltwo=[Wort in fremdsprache]'
+  -d 'lone=[German Wort]&ltwo=[Wort in fremdsprache]'
 ```
 #### response
 ```shell
@@ -29,5 +29,16 @@ curl -X 'POST' \
 ```
 !!! info
     **The response is every time `"hallo"`**
+
+## **Read vocab from server :lock:**
+## Endpoint
+`http[s]://[url]/api/vocab/read-list/{subject}/{classroom}/{id}`
+#### response
+```json
+{
+  "[German word]": "[Word in other language]",
+  "[German word]": "[Word in other language]"
+}
+```
 
 

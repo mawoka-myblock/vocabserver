@@ -45,7 +45,7 @@ type: *`application/json`*
 }
 ```
 !!! info
-    it is useless to set `"is_verified": true because it doesnt help!`
+    it is useless to set `"is_verified": true` because it doesnt help!
 #### curl example
 ```sh
 curl -X 'POST' \
@@ -119,7 +119,6 @@ curl -X 'POST' \
 }'
 ```
 #### response
-# TODO:
 ## **Request verify-token**
 type: *`application/json`*
 **kind:** POST
@@ -141,7 +140,7 @@ curl -X 'POST' \
 ```
 #### response
 ONLY IN CONSOLE FOR NOW
-### Verify token
+## Verify token
 type: *`application/json`*
 **kind:** POST
 #### value
@@ -170,3 +169,4 @@ curl -X 'POST' \
   "is_verified": true
 }
 ```
+
