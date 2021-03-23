@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi_users import models, FastAPIUsers
 from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
 from pydantic import validator
+from config import getdatadir
 
 app = FastAPI()
 DATABASE_URL = "sqlite:///users.db"
@@ -57,7 +58,7 @@ def after_verification_request(user: UserDB, token: str, request: Request):
 
 
 def on_after_register(user: UserDB, request: Request):
-    os.mkdir(f'data/userdata/{user.id}')
+    os.mkdir(f'{getdatadir()}/userdata/{user.id}')
     print(f"User {user.id} has registered.")
 
 

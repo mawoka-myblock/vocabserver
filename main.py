@@ -5,6 +5,8 @@ import datahandler
 import students
 from auth import User, SECRET
 from docs import tags_metadata
+from fastapi.responses import JSONResponse
+
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
@@ -42,7 +44,7 @@ async def update_item(subject: str, classroom: str, id: str, lone: str = Form(de
 
 @app.get("/api/vocab/list-list", tags=["vocabapi"])
 async def index(user: User = Depends(verified_user)):
-    return datahandler.getcontent()
+    return JSONResponse(content=datahandler.getcontent())
 
 
 @app.post("/api/students/write-stats/{subject}", tags=["students"])
