@@ -1,7 +1,6 @@
 site_name: MyDocs
 theme:
 site_dir: public
-site_url: https://mawoka.gitlab.io/vocab-server
   name: material
   custom_dir: docs/overrides
   palette:
