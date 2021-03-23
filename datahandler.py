@@ -1,11 +1,8 @@
 import os
-from fastapi import Form
-import pickle
-import json
-import re
-from collections import OrderedDict
 global response
 response = "hallo"
+from config import getdatadir
+import json
 
 
 #def savetoindex(path):
@@ -22,22 +19,23 @@ response = "hallo"
 #        return "success"
 
 def savetoindex(path):
-    with open(os.path.join('data/vocab/index.json'), "a") as f:
+    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "a") as f:
         f.writelines(path + "\n")
 
-    with open(os.path.join('data/vocab/index.json'), "r") as f:
+    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "r") as f:
         lines = f.readlines()
         lines_set = set(lines)
-    with open(os.path.join('data/vocab/index.json'), "w") as f:
+    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "w") as f:
         for line in lines_set:
             f.write(line)
+# TODO: DAS HIER AUCH NEU MACHEN!!!
 
 
 def save(subject, classroom, id, l1, l2):
     try:
-        os.mkdir("./data/vocab/" + classroom)
-        os.mkdir("./data/vocab/" + classroom + "/" + subject)
-        f = open(os.path.join('./data/vocab/' + classroom + '/' + subject + '/ '+ id + ".txt"), "a")
+        os.mkdir(f"{getdatadir()}/vocab/" + classroom)
+        os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
+        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/ '+ id + ".txt"), "a")
         # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
         f.write(l1)
         f.write(" : ")
@@ -50,7 +48,7 @@ def save(subject, classroom, id, l1, l2):
         print(response)
     except:
         try:
-            f = open(os.path.join('./data/vocab/' + classroom + '/' + subject, id + ".txt"), "a")
+            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject, id + ".txt"), "a")
             # f = open(os.path.join('./data' + classroom, id + ".txt"), "a")
             f.write(l1)
             f.write(" : ")
@@ -69,7 +67,7 @@ def save(subject, classroom, id, l1, l2):
 
 def read(subject, classroom, id):
     try:
-        with open(os.path.join('./data/vocab/' + classroom + '/' + subject, id + '.txt'), "r") as f:
+        with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject, id + '.txt'), "r") as f:
             content = f.readline()
         response = content
         return content
@@ -78,8 +76,9 @@ def read(subject, classroom, id):
 
 
 def getcontent():
-    with open(os.path.join('data/vocab/index.json'), "r") as f:
+    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "r") as f:
         index = f.read()
-    index = index.strip()
-    index = index.replace("\n", ";")
+    #index = index.strip()
+    #index = index.replace("\n", ";")
     return index
+# TODO: NEU MACHEN!!!
