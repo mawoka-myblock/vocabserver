@@ -4,7 +4,6 @@ config = configparser.ConfigParser()
 
 config['DIRECTORY'] = {'Data': './data'}
 
-confread = config.read("config.ini")
 
 def getdatadir():
     config.read('config.ini')
@@ -23,10 +22,17 @@ def debug():
     else:
         return False
 
+
 def passwdlength():
     config.read('config.ini')
     return config["SECURITY"]["Mininmal_Password_Length"]
 
+
 def getsecret():
     config.read('config.ini')
     return config["SECURITY"]["Secret"]
+
+
+def geturl():
+    config.read("config.ini")
+    return ["SERVER"]["Url"]
