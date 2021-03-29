@@ -3,15 +3,19 @@ import os
 import databases
 import sqlalchemy
 from fastapi import FastAPI, Request
-from fastapi_users import models
+import fastapi_users
 from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
 from pydantic import validator
+from fastapi_users import models
+from fastapi_users.authentication import JWTAuthentication
 
-from config import getdatadir
+from config import getdatadir, getsecret, passwdlength
+
+FastAPIUsers = fastapi_users.FastAPIUsers
 
 app = FastAPI()
 DATABASE_URL = "sqlite:///users.db"
-SECRET = "jkhgbvhfmgdjfjzgnhzvfzdcgjbnhzgrtg7hjjkt8hzoiig4uikzuhj78mio8z"
+SECRET = getsecret()
 metadata = sqlalchemy.MetaData()
 database = databases.Database(DATABASE_URL)
 
@@ -23,8 +27,8 @@ class User(models.BaseUser):
 class UserCreate(models.BaseUserCreate):
     @validator('password')
     def valid_password(cls, v: str):
-        if len(v) < 6:
-            raise ValueError('Password should be at least 6 characters')
+        if len(v) < passwdlength():
+            raise ValueError(f'Password should be at least {passwdlength()} characters')
         return v
 
 

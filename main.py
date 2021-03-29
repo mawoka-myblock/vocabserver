@@ -4,12 +4,14 @@ from fastapi.responses import JSONResponse
 import auth
 import datahandler
 import students
-from auth import User, SECRET
+from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
+from pywebio.platform.fastapi import webio_routes
+import ui
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
-jwt_authentication = auth.JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/auth/jwt/login")
+jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/auth/jwt/login")
 
 fastapi_users = auth.FastAPIUsers(auth.user_db, [jwt_authentication], User, auth.UserCreate, auth.UserUpdate,
                                   auth.UserDB, )
@@ -59,3 +61,5 @@ async def delete(subject: str, user: User = Depends(verified_user)):
 @app.patch("/api/vocab/edit-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
 async def update(subject: str, classroom: str, id: str, lone: str, ltwo: str, user: User = Depends(verified_user)):
     return datahandler.editcontent(subject, classroom, id, lone, ltwo)
+
+app.mount("/tool", FastAPI(routes=webio_routes(ui.login)))
