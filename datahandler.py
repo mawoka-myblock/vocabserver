@@ -1,6 +1,5 @@
 import os
 global response
-response = "hallo"
 from config import getdatadir
 import json
 
@@ -19,46 +18,54 @@ import json
 #        return "success"
 
 def savetoindex(path):
-    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "a") as f:
-        f.writelines(path + "\n")
+    try:
+        try:
+            with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "r") as f:
+                index = json.load(f)
+            index.append(path)
+            with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "w") as f:
+                json.dump(index, f, indent=2)
+            print("Success")
+        except:
+            index = [path]
+            with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "w") as f:
+                json.dump(index, f, indent=2)
+            print("Success")
+    except:
+        print("Error")
 
-    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "r") as f:
-        lines = f.readlines()
-        lines_set = set(lines)
-    with open(os.path.join(f'{getdatadir()}/vocab/index.json'), "w") as f:
-        for line in lines_set:
-            f.write(line)
-# TODO: DAS HIER AUCH NEU MACHEN!!!
 
 
 def save(subject, classroom, id, l1, l2):
     try:
+        print("H")
         os.mkdir(f"{getdatadir()}/vocab/" + classroom)
         os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
+        print("I")
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         data = {l1: l2}
         json.dump(data, f)
         f.close()
+        print("Hallo")
         fullpath = classroom + "/" + subject + "/" + id + ".json"
         savetoindex(fullpath)
-        response = "Success"
-        print(response)
+        return "Success"
     except:
-        try:
-            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
-            # f = open(os.path.join('./data' + classroom, id + ".json"), "a")
-            data = json.load(f)
-            f.close()
-            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
-            data.update({l1: l2})
-            json.dump(data, f)
-            fullpath = classroom + "/" + subject + "/" + id + ".json"
-            savetoindex(fullpath)
-            response = "Success"
-            print(response)
-        except:
-            response = "Error"
-            print(response)
+#        try:
+        print("J")
+        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
+        print("K")
+        data = json.load(f)
+        f.close()
+        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
+        data.update({l1: l2})
+        json.dump(data, f)
+        print("Moin")
+        fullpath = classroom + "/" + subject + "/" + id + ".json"
+        savetoindex(fullpath)
+        return "Success"
+#        except:
+#            return "Error"
 
 
 
@@ -72,8 +79,12 @@ def read(subject, classroom, id):
 
 def getcontent():
     with open(os.path.join(f'./{getdatadir()}/vocab/index.json'), "r") as f:
-        index = f.read()
+        index = json.load(f)
     #index = index.strip()
     #index = index.replace("\n", ";")
     return index
 # TODO: NEU MACHEN!!!
+
+
+def editcontent(subject, classroom, id, lone, ltwo):
+    return "NEEDS TO BE DONE AFTER WRITING STH ELSE IN JSON!!!"
