@@ -4,7 +4,7 @@ theme:
   name: material
   custom_dir: docs/overrides
   palette:
-        # Light mode
+    # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
@@ -48,12 +48,12 @@ markdown_extensions:
 nav:
   - About: index.md
   - Setup:
-    - Installation: installation.md
+      - Installation: installation.md
   - APIs:
-    - Authentification:
-        - authapi.md
-        - userapi.md
-    - studentapi.md
-    - vocabapi.md
+      - Authentification:
+          - authapi.md
+          - userapi.md
+      - studentapi.md
+      - vocabapi.md
 plugins:
   - search

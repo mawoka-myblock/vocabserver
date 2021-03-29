@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Form, Depends
+from fastapi.responses import JSONResponse
 
 import auth
 import datahandler
 import students
 from auth import User, SECRET
 from docs import tags_metadata
-from fastapi.responses import JSONResponse
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 

@@ -1,10 +1,11 @@
 import os
+
 global response
 from config import getdatadir
 import json
 
 
-#def savetoindex(path):
+# def savetoindex(path):
 #        with open(os.path.join('data/vocab/index.json'), "rb") as f:
 #            index = pickle.load(f)
 #        if index != "":
@@ -35,7 +36,6 @@ def savetoindex(path):
         print("Error")
 
 
-
 def save(subject, classroom, id, l1, l2):
     try:
         print("H")
@@ -51,7 +51,6 @@ def save(subject, classroom, id, l1, l2):
         savetoindex(fullpath)
         return "Success"
     except:
-#        try:
         print("J")
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
         print("K")
@@ -64,9 +63,6 @@ def save(subject, classroom, id, l1, l2):
         fullpath = classroom + "/" + subject + "/" + id + ".json"
         savetoindex(fullpath)
         return "Success"
-#        except:
-#            return "Error"
-
 
 
 def read(subject, classroom, id):
@@ -80,9 +76,9 @@ def read(subject, classroom, id):
 def getcontent():
     with open(os.path.join(f'./{getdatadir()}/vocab/index.json'), "r") as f:
         index = json.load(f)
-    #index = index.strip()
-    #index = index.replace("\n", ";")
     return index
+
+
 # TODO: NEU MACHEN!!!
 
 

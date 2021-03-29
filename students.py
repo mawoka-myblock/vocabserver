@@ -1,9 +1,8 @@
 import json
 import os
+
 global data
 from config import getdatadir
-
-
 
 
 def saveresult(uid, ltwo, hdiw, subject):
@@ -27,7 +26,6 @@ def saveresult(uid, ltwo, hdiw, subject):
             return "Error"
 
 
-
 def readresult(uid, subject):
     try:
         with open(f"{getdatadir()}/userdata/{uid}/{subject}.json", "r") as f:
@@ -35,12 +33,10 @@ def readresult(uid, subject):
     except:
         return "Error"
 
+
 def delete(uid, subject):
     try:
         os.remove(f"{getdatadir()}/userdata/{uid}/{subject}.json")
         return "Success"
     except:
         return "Error"
-
-
-

@@ -1,1 +1,1060 @@
-{"openapi":"3.0.2","info":{"title":"Vocabserver","version":"0.0.1"},"paths":{"/auth/jwt/login":{"post":{"tags":["auth"],"summary":"Login","operationId":"login_auth_jwt_login_post","requestBody":{"content":{"application/x-www-form-urlencoded":{"schema":{"$ref":"#/components/schemas/Body_login_auth_jwt_login_post"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/auth/register":{"post":{"tags":["auth"],"summary":"Register","operationId":"register_auth_register_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserCreate"}}},"required":true},"responses":{"201":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/auth/forgot-password":{"post":{"tags":["auth"],"summary":"Forgot Password","operationId":"forgot_password_auth_forgot_password_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Body_forgot_password_auth_forgot_password_post"}}},"required":true},"responses":{"202":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/auth/reset-password":{"post":{"tags":["auth"],"summary":"Reset Password","operationId":"reset_password_auth_reset_password_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Body_reset_password_auth_reset_password_post"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/auth/request-verify-token":{"post":{"tags":["auth"],"summary":"Request Verify Token","operationId":"request_verify_token_auth_request_verify_token_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Body_request_verify_token_auth_request_verify_token_post"}}},"required":true},"responses":{"202":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/auth/verify":{"post":{"tags":["auth"],"summary":"Verify","operationId":"verify_auth_verify_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Body_verify_auth_verify_post"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/users/me":{"get":{"tags":["users"],"summary":"Me","operationId":"me_users_me_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}}},"security":[{"OAuth2PasswordBearer":[]}]},"patch":{"tags":["users"],"summary":"Update Me","operationId":"update_me_users_me_patch","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserUpdate"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/users/{id}":{"get":{"tags":["users"],"summary":"Get User","operationId":"get_user_users__id__get","parameters":[{"required":true,"schema":{"title":"Id","type":"string","format":"uuid4"},"name":"id","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]},"delete":{"tags":["users"],"summary":"Delete User","operationId":"delete_user_users__id__delete","parameters":[{"required":true,"schema":{"title":"Id","type":"string","format":"uuid4"},"name":"id","in":"path"}],"responses":{"204":{"description":"Successful Response"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]},"patch":{"tags":["users"],"summary":"Update User","operationId":"update_user_users__id__patch","parameters":[{"required":true,"schema":{"title":"Id","type":"string","format":"uuid4"},"name":"id","in":"path"}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UserUpdate"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/api/vocab/read-list/{subject}/{classroom}/{id}":{"get":{"tags":["vocabapi"],"summary":"Update Item","operationId":"update_item_api_vocab_read_list__subject___classroom___id__get","parameters":[{"required":true,"schema":{"title":"Subject","type":"string"},"name":"subject","in":"path"},{"required":true,"schema":{"title":"Classroom","type":"string"},"name":"classroom","in":"path"},{"required":true,"schema":{"title":"Id","type":"string"},"name":"id","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/api/vocab/add-list/{subject}/{classroom}/{id}":{"post":{"tags":["vocabapi"],"summary":"Update Item","operationId":"update_item_api_vocab_add_list__subject___classroom___id__post","parameters":[{"required":true,"schema":{"title":"Subject","type":"string"},"name":"subject","in":"path"},{"required":true,"schema":{"title":"Classroom","type":"string"},"name":"classroom","in":"path"},{"required":true,"schema":{"title":"Id","type":"string"},"name":"id","in":"path"}],"requestBody":{"content":{"application/x-www-form-urlencoded":{"schema":{"$ref":"#/components/schemas/Body_update_item_api_vocab_add_list__subject___classroom___id__post"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/api/vocab/list-list":{"get":{"tags":["vocabapi"],"summary":"Index","operationId":"index_api_vocab_list_list_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/api/students/write-stats/{subject}":{"post":{"tags":["students"],"summary":"Index","operationId":"index_api_students_write_stats__subject__post","parameters":[{"required":true,"schema":{"title":"Subject","type":"string"},"name":"subject","in":"path"}],"requestBody":{"content":{"application/x-www-form-urlencoded":{"schema":{"$ref":"#/components/schemas/Body_index_api_students_write_stats__subject__post"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/api/students/get-stats/{subject}":{"get":{"tags":["students"],"summary":"Index","operationId":"index_api_students_get_stats__subject__get","parameters":[{"required":true,"schema":{"title":"Subject","type":"string"},"name":"subject","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}},"/api/students/delete-stats/{subject}":{"delete":{"tags":["students"],"summary":"Delete","operationId":"delete_api_students_delete_stats__subject__delete","parameters":[{"required":true,"schema":{"title":"Subject","type":"string"},"name":"subject","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"OAuth2PasswordBearer":[]}]}}},"components":{"schemas":{"Body_forgot_password_auth_forgot_password_post":{"title":"Body_forgot_password_auth_forgot_password_post","required":["email"],"type":"object","properties":{"email":{"title":"Email","type":"string","format":"email"}}},"Body_index_api_students_write_stats__subject__post":{"title":"Body_index_api_students_write_stats__subject__post","type":"object","properties":{"ltwo":{"title":"Ltwo","type":"string"},"hdiw":{"title":"Hdiw","type":"string"}}},"Body_login_auth_jwt_login_post":{"title":"Body_login_auth_jwt_login_post","required":["username","password"],"type":"object","properties":{"grant_type":{"title":"Grant Type","pattern":"password","type":"string"},"username":{"title":"Username","type":"string"},"password":{"title":"Password","type":"string"},"scope":{"title":"Scope","type":"string","default":""},"client_id":{"title":"Client Id","type":"string"},"client_secret":{"title":"Client Secret","type":"string"}}},"Body_request_verify_token_auth_request_verify_token_post":{"title":"Body_request_verify_token_auth_request_verify_token_post","required":["email"],"type":"object","properties":{"email":{"title":"Email","type":"string","format":"email"}}},"Body_reset_password_auth_reset_password_post":{"title":"Body_reset_password_auth_reset_password_post","required":["token","password"],"type":"object","properties":{"token":{"title":"Token","type":"string"},"password":{"title":"Password","type":"string"}}},"Body_update_item_api_vocab_add_list__subject___classroom___id__post":{"title":"Body_update_item_api_vocab_add_list__subject___classroom___id__post","type":"object","properties":{"lone":{"title":"Lone","type":"string"},"ltwo":{"title":"Ltwo","type":"string"}}},"Body_verify_auth_verify_post":{"title":"Body_verify_auth_verify_post","required":["token"],"type":"object","properties":{"token":{"title":"Token","type":"string"}}},"HTTPValidationError":{"title":"HTTPValidationError","type":"object","properties":{"detail":{"title":"Detail","type":"array","items":{"$ref":"#/components/schemas/ValidationError"}}}},"User":{"title":"User","type":"object","properties":{"id":{"title":"Id","type":"string","format":"uuid4"},"email":{"title":"Email","type":"string","format":"email"},"is_active":{"title":"Is Active","type":"boolean","default":true},"is_superuser":{"title":"Is Superuser","type":"boolean","default":false},"is_verified":{"title":"Is Verified","type":"boolean","default":false}},"description":"Base User model."},"UserCreate":{"title":"UserCreate","required":["email","password"],"type":"object","properties":{"email":{"title":"Email","type":"string","format":"email"},"password":{"title":"Password","type":"string"},"is_active":{"title":"Is Active","type":"boolean","default":true},"is_superuser":{"title":"Is Superuser","type":"boolean","default":false},"is_verified":{"title":"Is Verified","type":"boolean","default":false}}},"UserUpdate":{"title":"UserUpdate","type":"object","properties":{"id":{"title":"Id","type":"string","format":"uuid4"},"email":{"title":"Email","type":"string","format":"email"},"is_active":{"title":"Is Active","type":"boolean","default":true},"is_superuser":{"title":"Is Superuser","type":"boolean","default":false},"is_verified":{"title":"Is Verified","type":"boolean","default":false},"password":{"title":"Password","type":"string"}},"description":"Base User model."},"ValidationError":{"title":"ValidationError","required":["loc","msg","type"],"type":"object","properties":{"loc":{"title":"Location","type":"array","items":{"type":"string"}},"msg":{"title":"Message","type":"string"},"type":{"title":"Error Type","type":"string"}}}},"securitySchemes":{"OAuth2PasswordBearer":{"type":"oauth2","flows":{"password":{"scopes":{},"tokenUrl":"/auth/jwt/login"}}}}},"tags":[{"name":"auth","description":"It handles the login , registration and verification"},{"name":"vocabapi","description":"Read and write vocab from/to server"},{"name":"students","description":"read/write stats to server for student"},{"name":"users","description":"get, edit and delete user(s)"}]} 
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Vocabserver",
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/auth/jwt/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "operationId": "login_auth_jwt_login_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_auth_jwt_login_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Register",
+        "operationId": "register_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Forgot Password",
+        "operationId": "forgot_password_auth_forgot_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_forgot_password_auth_forgot_password_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Reset Password",
+        "operationId": "reset_password_auth_reset_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_reset_password_auth_reset_password_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/request-verify-token": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Request Verify Token",
+        "operationId": "request_verify_token_auth_request_verify_token_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_request_verify_token_auth_request_verify_token_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Verify",
+        "operationId": "verify_auth_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_verify_auth_verify_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Me",
+        "operationId": "me_users_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update Me",
+        "operationId": "update_me_users_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get User",
+        "operationId": "get_user_users__id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid4"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete User",
+        "operationId": "delete_user_users__id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid4"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update User",
+        "operationId": "update_user_users__id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid4"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/vocab/read-list/{subject}/{classroom}/{id}": {
+      "get": {
+        "tags": [
+          "vocabapi"
+        ],
+        "summary": "Update Item",
+        "operationId": "update_item_api_vocab_read_list__subject___classroom___id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Subject",
+              "type": "string"
+            },
+            "name": "subject",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Classroom",
+              "type": "string"
+            },
+            "name": "classroom",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/vocab/add-list/{subject}/{classroom}/{id}": {
+      "post": {
+        "tags": [
+          "vocabapi"
+        ],
+        "summary": "Update Item",
+        "operationId": "update_item_api_vocab_add_list__subject___classroom___id__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Subject",
+              "type": "string"
+            },
+            "name": "subject",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Classroom",
+              "type": "string"
+            },
+            "name": "classroom",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_update_item_api_vocab_add_list__subject___classroom___id__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/vocab/list-list": {
+      "get": {
+        "tags": [
+          "vocabapi"
+        ],
+        "summary": "Index",
+        "operationId": "index_api_vocab_list_list_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/students/write-stats/{subject}": {
+      "post": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Index",
+        "operationId": "index_api_students_write_stats__subject__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Subject",
+              "type": "string"
+            },
+            "name": "subject",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_index_api_students_write_stats__subject__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/students/get-stats/{subject}": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Index",
+        "operationId": "index_api_students_get_stats__subject__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Subject",
+              "type": "string"
+            },
+            "name": "subject",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/students/delete-stats/{subject}": {
+      "delete": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Delete",
+        "operationId": "delete_api_students_delete_stats__subject__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Subject",
+              "type": "string"
+            },
+            "name": "subject",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_forgot_password_auth_forgot_password_post": {
+        "title": "Body_forgot_password_auth_forgot_password_post",
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "Body_index_api_students_write_stats__subject__post": {
+        "title": "Body_index_api_students_write_stats__subject__post",
+        "type": "object",
+        "properties": {
+          "ltwo": {
+            "title": "Ltwo",
+            "type": "string"
+          },
+          "hdiw": {
+            "title": "Hdiw",
+            "type": "string"
+          }
+        }
+      },
+      "Body_login_auth_jwt_login_post": {
+        "title": "Body_login_auth_jwt_login_post",
+        "required": [
+          "username",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "grant_type": {
+            "title": "Grant Type",
+            "pattern": "password",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "scope": {
+            "title": "Scope",
+            "type": "string",
+            "default": ""
+          },
+          "client_id": {
+            "title": "Client Id",
+            "type": "string"
+          },
+          "client_secret": {
+            "title": "Client Secret",
+            "type": "string"
+          }
+        }
+      },
+      "Body_request_verify_token_auth_request_verify_token_post": {
+        "title": "Body_request_verify_token_auth_request_verify_token_post",
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "Body_reset_password_auth_reset_password_post": {
+        "title": "Body_reset_password_auth_reset_password_post",
+        "required": [
+          "token",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          }
+        }
+      },
+      "Body_update_item_api_vocab_add_list__subject___classroom___id__post": {
+        "title": "Body_update_item_api_vocab_add_list__subject___classroom___id__post",
+        "type": "object",
+        "properties": {
+          "lone": {
+            "title": "Lone",
+            "type": "string"
+          },
+          "ltwo": {
+            "title": "Ltwo",
+            "type": "string"
+          }
+        }
+      },
+      "Body_verify_auth_verify_post": {
+        "title": "Body_verify_auth_verify_post",
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "User": {
+        "title": "User",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid4"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean",
+            "default": true
+          },
+          "is_superuser": {
+            "title": "Is Superuser",
+            "type": "boolean",
+            "default": false
+          },
+          "is_verified": {
+            "title": "Is Verified",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "description": "Base User model."
+      },
+      "UserCreate": {
+        "title": "UserCreate",
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean",
+            "default": true
+          },
+          "is_superuser": {
+            "title": "Is Superuser",
+            "type": "boolean",
+            "default": false
+          },
+          "is_verified": {
+            "title": "Is Verified",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "UserUpdate": {
+        "title": "UserUpdate",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid4"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "format": "email"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean",
+            "default": true
+          },
+          "is_superuser": {
+            "title": "Is Superuser",
+            "type": "boolean",
+            "default": false
+          },
+          "is_verified": {
+            "title": "Is Verified",
+            "type": "boolean",
+            "default": false
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "description": "Base User model."
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "/auth/jwt/login"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "It handles the login , registration and verification"
+    },
+    {
+      "name": "vocabapi",
+      "description": "Read and write vocab from/to server"
+    },
+    {
+      "name": "students",
+      "description": "read/write stats to server for student"
+    },
+    {
+      "name": "users",
+      "description": "get, edit and delete user(s)"
+    }
+  ]
+}

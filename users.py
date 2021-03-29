@@ -84,6 +84,7 @@ app.include_router(
 )
 app.include_router(fastapi_users.get_users_router(), prefix="/users", tags=["users"])
 
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}

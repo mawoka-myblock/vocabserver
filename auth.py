@@ -1,12 +1,12 @@
-import databases
 import os
-import sqlalchemy
 
-from fastapi_users.authentication import JWTAuthentication
+import databases
+import sqlalchemy
 from fastapi import FastAPI, Request
-from fastapi_users import models, FastAPIUsers
+from fastapi_users import models
 from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
 from pydantic import validator
+
 from config import getdatadir
 
 app = FastAPI()
