@@ -27,8 +27,8 @@ class User(models.BaseUser):
 class UserCreate(models.BaseUserCreate):
     @validator('password')
     def valid_password(cls, v: str):
-        if len(v) < passwdlength():
-            raise ValueError(f'Password should be at least {passwdlength()} characters')
+        if len(v) < int(passwdlength()):
+            raise ValueError(f'Password should be at least {int(passwdlength())} characters')
         return v
 
 

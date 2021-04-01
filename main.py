@@ -6,8 +6,9 @@ import datahandler
 import students
 from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
-from pywebio.platform.fastapi import webio_routes
-import ui
+#from pywebio.platform.fastapi import webio_routes
+#import ui
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
@@ -62,4 +63,5 @@ async def delete(subject: str, user: User = Depends(verified_user)):
 async def update(subject: str, classroom: str, id: str, lone: str, ltwo: str, user: User = Depends(verified_user)):
     return datahandler.editcontent(subject, classroom, id, lone, ltwo)
 
-app.mount("/tool", FastAPI(routes=webio_routes(ui.login)))
+#app.mount("/static", StaticFiles(directory="static"), name="static")
+#app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))

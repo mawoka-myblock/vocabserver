@@ -35,4 +35,4 @@ def getsecret():
 
 def geturl():
     config.read("config.ini")
-    return ["SERVER"]["Url"]
+    return config["SERVER"]["Url"]
