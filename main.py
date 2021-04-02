@@ -39,7 +39,7 @@ async def update_item(subject: str, classroom: str, id: str, lone: str = Form(de
     return datahandler.save(subject, classroom, id, lone, ltwo)
 
 
-@app.get("/api/vocab/list-list", tags=["vocabapi"])
+@app.get("/api/vocab/list-list/{classroom}", tags=["vocabapi"])
 async def index(user: User = Depends(verified_user)):
     return JSONResponse(content=datahandler.getcontent())
 
