@@ -20,44 +20,44 @@ def savetoindex(classroom, id, subject):
                 json.dump(index, f, indent=2)
             print("Success")
     except:
-        print("Error")
+        print("Error in datahandler.savetoindex")
 
 
 def save(subject, classroom, id, l1, l2):
     with suppress(Exception):
-        print("H")
+        #print("H")
         os.mkdir(f"{getdatadir()}/vocab/" + classroom)
         os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
-        print("I")
+        #print("I")
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         data = {l1: l2}
         json.dump(data, f)
         f.close()
-        print("Hallo")
+        #print("Hallo")
         savetoindex(classroom, id, subject)
         return "Success"
     try:
         with suppress(Exception):
-            print("J")
+            #print("J")
             f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
-            print("K")
+            #print("K")
             data = json.load(f)
             f.close()
-        print("ö")
+        #print("ö")
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         data.update({l1: l2})
         json.dump(data, f)
-        print("Moin")
+        #print("Moin")
         savetoindex(classroom, id, subject)
-        print("Kein Fehler")
+        #print("Kein Fehler")
         return "Success"
     except:
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
-        print("Hallo")
+        #print("Hallo")
         data = {l1: l2}
         json.dump(data, f)
         f.close()
-        print("Hallo")
+        #print("Hallo")
         savetoindex(classroom, id, subject)
         return "Success"
 
@@ -67,13 +67,16 @@ def read(subject, classroom, id):
         with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + "/" + id + '.json'), "r") as f:
             return json.load(f)
     except:
-        return "Error 128596335"
+        return "Error in datahandler.read"
 
 
-def getcontent():
-    with open(os.path.join(f'./{getdatadir()}/vocab/{subject}/index.json'), "r") as f:
-        index = json.load(f)
-    return index
+def getcontent(subject, classroom):
+    try:
+        with open(os.path.join(f'./{getdatadir()}/vocab/{classroom}/{subject}/index.json'), "r") as f:
+            index = json.load(f)
+        return index
+    except Exception:
+        return "Error in datahandler.getcontent"
 
 
 # TODO: NEU MACHEN!!!

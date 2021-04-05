@@ -9,6 +9,19 @@ from functools import partial
 import ui
 
 
-def index(language):
+def getvocab(classroom, subject, id):
+    response = requests.get(f'{geturl()}/api/vocab/read-list/{subject}/{classroom}/{id}', headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}', })
+
+def getstats(subject):
+    response = requests.get(f'{geturl()}/api/students/get-stats/{subject}/', headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}', })
+
+def index(subject, classroom):
+
+    response = requests.get(f'{geturl()}/api/vocab/list-list/{subject}/{classroom}', headers={ 'accept': 'application/json',
+    'Authorization': f'Bearer {ui.token}'})
+
     with use_scope('First_Scope', clear=True):
-        what_to_do = input_group()
+        what_to_do = input(datalist=json.loads(response.text))
+
+
+
