@@ -17,8 +17,8 @@ def convert_lang(word):
     elif word == "Englisch":
         return "english"
     else:
+        print("Unexpected error in interface.ui.convert_lang")
         return "error"
-    print("Unexpected error in interface.ui.convert_lang")
 
 
 
@@ -30,7 +30,7 @@ def select_what_to_do():
     if what_to_do["action"] == "Lernen":
         learn.index(convert_lang(what_to_do["language"]), classroom)
     elif what_to_do["action"] == "Erstellen":
-        create.index(convert_lang(what_to_do["language"]))
+        create.index()                                 #convert_lang(what_to_do["language"])
     elif what_to_do["action"] == "Wörterbuch":
         dictonary.index(convert_lang(what_to_do["language"]))
 

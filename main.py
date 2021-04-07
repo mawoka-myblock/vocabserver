@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, Depends
+from fastapi import FastAPI, Depends
 from fastapi.responses import JSONResponse
 
 import auth
@@ -8,7 +8,6 @@ from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
 #from pywebio.platform.fastapi import webio_routes
 #import ui
-from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
@@ -34,8 +33,8 @@ async def update_item(subject: str, classroom: str, id: str, user: User = Depend
 
 
 @app.post("/api/vocab/add-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
-async def update_item(subject: str, classroom: str, id: str, lone: str = Form(default=None),
-                      ltwo: str = Form(default=None), user: User = Depends(verified_user)):
+async def update_item(subject: str, classroom: str, id: str, lone: str,
+                      ltwo: str, user: User = Depends(verified_user)):
     return datahandler.save(subject, classroom, id, lone, ltwo)
 
 
