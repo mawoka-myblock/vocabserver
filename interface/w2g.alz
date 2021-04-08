@@ -7,23 +7,12 @@
  <text-size>11000</text-size>
  <corner-radius>5000</corner-radius>
  <graph>
-  <node w="200000" x="675579" y="-79297" h="75000" index="12">
-   <text>+1 for the word</text>
+  <node w="200000" x="-696933" y="-342848" h="75000" index="0">
+   <text>Start</text>
    <color g="255" r="255" b="255"/>
    <text-color g="0" r="0" b="0"/>
   </node>
-  <node w="200000" x="222634" y="-98916" h="75000" index="11">
-   <text>-1 for the word</text>
-   <color g="255" r="255" b="255"/>
-   <text-color g="0" r="0" b="0"/>
-  </node>
-  <node w="275000" x="674726" y="-337757" h="75000" index="9">
-   <text>Every word with 1 and 2 gets asked</text>
-   <color g="255" r="255" b="255"/>
-   <text-color g="0" r="0" b="0"/>
-  </node>
-  <node w="200000" x="168894" y="-336904" h="75000" index="5">
-   <text>Check words with stats</text>
+  <node w="200000" x="441003" y="89597" h="75000" index="13">
    <color g="255" r="255" b="255"/>
    <text-color g="0" r="0" b="0"/>
   </node>
@@ -32,32 +21,43 @@
    <color g="255" r="255" b="255"/>
    <text-color g="0" r="0" b="0"/>
   </node>
-  <node w="200000" x="441003" y="89597" h="75000" index="13">
+  <node w="200000" x="168894" y="-336904" h="75000" index="5">
+   <text>Check words with stats</text>
    <color g="255" r="255" b="255"/>
    <text-color g="0" r="0" b="0"/>
   </node>
-  <node w="200000" x="-683256" y="-343760" h="75000" index="0">
-   <text>Start</text>
+  <node w="275000" x="674726" y="-337757" h="75000" index="9">
+   <text>Every word with 1 and 2 gets asked</text>
    <color g="255" r="255" b="255"/>
    <text-color g="0" r="0" b="0"/>
   </node>
-  <edge index0="12" index1="13" reversed="0" arrow-mode="0"/>
-  <edge index0="11" index1="13" reversed="0" arrow-mode="0"/>
-  <edge index0="9" index1="12" reversed="0" arrow-mode="0">
-   <text>If the word is wrong</text>
-  </edge>
-  <edge index0="9" index1="11" reversed="0" arrow-mode="0">
-   <text>If the word is right, </text>
-  </edge>
-  <edge index0="5" index1="9" reversed="0" arrow-mode="0">
-   <text>Filter the words with "3" out </text>
+  <node w="200000" x="203485" y="-107122" h="75000" index="11">
+   <text>+1 for the word</text>
+   <color g="255" r="255" b="255"/>
+   <text-color g="0" r="0" b="0"/>
+  </node>
+  <node w="200000" x="691080" y="-90239" h="75000" index="12">
+   <text>-1 for the word</text>
+   <color g="255" r="255" b="255"/>
+   <text-color g="0" r="0" b="0"/>
+  </node>
+  <edge index0="0" index1="1" reversed="0" arrow-mode="0">
+   <text>Get Words from Server</text>
   </edge>
   <edge index0="1" index1="5" reversed="0" arrow-mode="0">
    <text>Get stats from Server</text>
   </edge>
-  <edge index0="0" index1="1" reversed="0" arrow-mode="0">
-   <text>Get Words from Server</text>
+  <edge index0="5" index1="9" reversed="0" arrow-mode="0">
+   <text>Filter the words with "3" out </text>
   </edge>
+  <edge index0="9" index1="11" reversed="0" arrow-mode="0">
+   <text>If the word is right, </text>
+  </edge>
+  <edge index0="9" index1="12" reversed="0" arrow-mode="0">
+   <text>If the word is wrong</text>
+  </edge>
+  <edge index0="11" index1="13" reversed="0" arrow-mode="0"/>
+  <edge index0="12" index1="13" reversed="0" arrow-mode="0"/>
  </graph>
  <layout-optimizer min-edge-length="100000" aspect-ratio="1000"/>
 </heimer-mind-map>

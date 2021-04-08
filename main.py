@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Body, Form
 from fastapi.responses import JSONResponse
 
 import auth
@@ -33,8 +33,8 @@ async def update_item(subject: str, classroom: str, id: str, user: User = Depend
 
 
 @app.post("/api/vocab/add-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
-async def update_item(subject: str, classroom: str, id: str, lone: str,
-                      ltwo: str, user: User = Depends(verified_user)):
+async def update_item(subject: str, classroom: str, id: str, lone: str = Form(default=None),
+                      ltwo: str = Form(default=None), user: User = Depends(verified_user)):
     return datahandler.save(subject, classroom, id, lone, ltwo)
 
 
@@ -44,7 +44,7 @@ async def index(classroom: str, subject: str, user: User = Depends(verified_user
 
 
 @app.post("/api/students/write-stats/{subject}", tags=["students"])
-async def index(subject: str, ltwo: str, hdiw: str, user: User = Depends(verified_user)):  # hdiw = how did it work
+async def index(subject: str, ltwo: str = Form(default=None), hdiw: str = Form(default=None), user: User = Depends(verified_user)):  # hdiw = how did it work
     return students.saveresult(user.id, ltwo, hdiw, subject)
 
 
@@ -59,7 +59,7 @@ async def delete(subject: str, user: User = Depends(verified_user)):
 
 
 @app.patch("/api/vocab/edit-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
-async def update(subject: str, classroom: str, id: str, lone: str, ltwo: str, user: User = Depends(verified_user)):
+async def update(subject: str, classroom: str, id: str, lone: str = Form(default=None), ltwo: str = Form(default=None), user: User = Depends(verified_user)):
     return datahandler.editcontent(subject, classroom, id, lone, ltwo)
 
 #app.mount("/static", StaticFiles(directory="static"), name="static")

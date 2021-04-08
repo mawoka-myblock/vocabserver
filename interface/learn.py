@@ -18,7 +18,7 @@ def getstats(subject):
 
 def index(subject, classroom):
 
-    response = requests.get(f'{geturl()}/api/vocab/list-list/{subject}/{classroom}', headers={ 'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
+    response = requests.get(f'{geturl()}/api/vocab/list-list/{subject}/{classroom}', headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
 
     with use_scope('First_Scope', clear=True):
         what_to_do = input("Bitte wähle das Kapitel aus!", datalist=json.loads(response.text))

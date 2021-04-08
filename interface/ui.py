@@ -1,12 +1,14 @@
+import json
+
+import requests
 from pywebio.input import *
 from pywebio.output import *
 from pywebio.platform import *
-import requests
-import config
+
+import create
+import dictonary
+import learn
 from config import geturl
-import json
-from functools import partial
-import create, dictonary, learn
 
 
 def convert_lang(word):
@@ -30,7 +32,7 @@ def select_what_to_do():
     if what_to_do["action"] == "Lernen":
         learn.index(convert_lang(what_to_do["language"]), classroom)
     elif what_to_do["action"] == "Erstellen":
-        create.index()                                 #convert_lang(what_to_do["language"])
+        create.index(convert_lang(what_to_do["language"]), token, classroom)                                 #convert_lang(what_to_do["language"])
     elif what_to_do["action"] == "Wörterbuch":
         dictonary.index(convert_lang(what_to_do["language"]))
 
@@ -49,26 +51,24 @@ def login():
         classroom = login_fields["classroom"]
     else:
         print("Unexpected error in interface.ui.login!")
-    response = requests.post(f'{geturl()}/auth/jwt/login', headers={'accept': 'application/json',
+    response = requests.post(f'{geturl()}/auth/jwt/login', headers={'accept': 'application/x-www-form-urlencoded',
                                                                     'Content-Type': 'application/x-www-form-urlencoded'},
                              data={'grant_type': '', 'username': f'{login_fields["mail"]}',
                                    'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
                                    'client_secret': ''})
     with use_scope('First_Scope', clear=True):
         try:
-            try:
-                if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
-                    put_error("Falsche Anmeldedaten!")
-                    login()
+            if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
+                put_error("Falsche Anmeldedaten!")
+                login()
 
-            except:
-                if "bearer" == json.loads(response.text)["token_type"]:
-                    global token
-                    token = json.loads(response.text)["access_token"]
-                    put_success("Logged in succesfully!")
-                    select_what_to_do()
         except:
-            put_text("Unknown Error!")
+            if "bearer" == json.loads(response.text)["token_type"]:
+                global token
+                token = json.loads(response.text)["access_token"]
+                put_success("Logged in succesfully!")
+                select_what_to_do()
+
 
 # start_server(login)
 start_server([login], port=5000)
