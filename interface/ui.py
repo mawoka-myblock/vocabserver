@@ -5,6 +5,7 @@ from pywebio.input import *
 from pywebio.output import *
 from pywebio.platform import *
 
+from icecream import ic
 import create
 import dictonary
 import learn
@@ -21,7 +22,6 @@ def convert_lang(word):
     else:
         print("Unexpected error in interface.ui.convert_lang")
         return "error"
-
 
 
 

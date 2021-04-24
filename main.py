@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, Body, Form
+from fastapi import FastAPI, Depends, Form, File, UploadFile
 from fastapi.responses import JSONResponse
 
 import auth
@@ -6,8 +6,7 @@ import datahandler
 import students
 from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
-#from pywebio.platform.fastapi import webio_routes
-#import ui
+from fastapi.responses import ORJSONResponse
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
@@ -44,7 +43,8 @@ async def index(classroom: str, subject: str, user: User = Depends(verified_user
 
 
 @app.post("/api/students/write-stats/{subject}", tags=["students"])
-async def index(subject: str, ltwo: str = Form(default=None), hdiw: str = Form(default=None), user: User = Depends(verified_user)):  # hdiw = how did it work
+async def index(subject: str, ltwo: str = Form(default=None), hdiw: str = Form(default=None),
+                user: User = Depends(verified_user)):  # hdiw = how did it work
     return students.saveresult(user.id, ltwo, hdiw, subject)
 
 
@@ -59,8 +59,15 @@ async def delete(subject: str, user: User = Depends(verified_user)):
 
 
 @app.patch("/api/vocab/edit-list/{subject}/{classroom}/{id}", tags=["vocabapi"])
-async def update(subject: str, classroom: str, id: str, lone: str = Form(default=None), ltwo: str = Form(default=None), user: User = Depends(verified_user)):
+async def update(subject: str, classroom: str, id: str, lone: str = Form(default=None), ltwo: str = Form(default=None),
+                 user: User = Depends(verified_user)):
     return datahandler.editcontent(subject, classroom, id, lone, ltwo)
 
-#app.mount("/static", StaticFiles(directory="static"), name="static")
-#app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))
+
+@app.post("/api/vocab/upload/{subject}/{classroom}/{id}", tags=["vocabapi"])
+async def index(subject: str, classroom: str, id: str, file: UploadFile = File(default=None), user: User = Depends(verified_user)):
+    filecontent = await file.read()
+    datahandler.filehandler(subject, classroom, id, filecontent)
+
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))

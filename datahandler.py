@@ -3,7 +3,9 @@ from contextlib import suppress
 global response
 from config import getdatadir
 import json
-
+import pickle
+import codecs
+from icecream import ic
 
 def savetoindex(classroom, id, subject):
     try:
@@ -20,7 +22,7 @@ def savetoindex(classroom, id, subject):
                 json.dump(index, f, indent=2)
             print("Success")
     except:
-        print("Error in datahandler.savetoindex")
+        print(ic())
 
 
 def save(subject, classroom, id, l1, l2):
@@ -67,7 +69,7 @@ def read(subject, classroom, id):
         with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + "/" + id + '.json'), "r") as f:
             return json.load(f)
     except:
-        return "Error in datahandler.read"
+        return ic()
 
 
 def getcontent(subject, classroom):
@@ -76,7 +78,7 @@ def getcontent(subject, classroom):
             index = json.load(f)
         return index
     except Exception:
-        return "Error in datahandler.getcontent"
+        return ic()
 
 
 # TODO: NEU MACHEN!!!
@@ -84,3 +86,16 @@ def getcontent(subject, classroom):
 
 def editcontent(subject, classroom, id, lone, ltwo):
     return "NEEDS TO BE DONE AFTER WRITING STH ELSE IN JSON!!!"
+
+
+def filehandler(subject, classroom, id, file):
+    try:
+        with open(os.path.join(f'{getdatadir()}/vocab/{classroom}/{subject}/{id}.json'), "w") as f:
+            file_decoded = codecs.decode(file, "UTF-8")
+            ic(file_decoded)
+            f.write(file_decoded)
+            savetoindex(classroom, id, subject)
+            return "Success"
+    except Exception:
+        return ic()
+

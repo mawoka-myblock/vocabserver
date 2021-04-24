@@ -2,20 +2,31 @@ from pywebio.input import *
 from pywebio.output import *
 from pywebio.platform import *
 from config import geturl
-
-
+from icecream import ic
 
 import requests
-import json
 
 lang1List = []
 lang2List = []
 
 def index(language, token, classroom):
-    with use_scope("First_Scope", clear=True):
+    clear("First_Scope")
+    with use_scope("First_Scope"):
         global id
-        id = input("Please enter the Unit-ID", required=True)
-    vocabhandler(language, token, classroom)
+        startgroup = input_group("Please enter the Unit-ID", [input("Bitte hier die ID eingeben", name="id", required=True), file_upload(accept=".json", max_size="2M", placeholder="Here you can upload a file instead of typing it in manually!", name="file")])
+        id = startgroup["id"]
+        #ic(startgroup["file"]["filename"])
+        #ic(startgroup["file"]["content"])
+        try:
+            r = requests.post(f"{geturl()}/api/vocab/upload/{language}/{classroom}/{id}", headers={'accept': 'application/json', 'Authorization': f'Bearer {token}', 'Content-Type': 'multipart/form-data'}, data=startgroup["file"]["content"])
+            ic(r.text)
+        except Exception:
+            vocabhandler(language, token, classroom)
+            with use_scope("First_Scope"):
+                toast("Keine Datei wurde hochgeladen!")
+
+   # vocabhandler(language, token, classroom)
+
 
 
 def vocabhandler(language, token, classroom):
