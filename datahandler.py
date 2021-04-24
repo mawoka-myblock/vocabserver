@@ -1,11 +1,13 @@
 import os
 from contextlib import suppress
+
 global response
 from config import getdatadir
 import json
 import pickle
 import codecs
 from icecream import ic
+
 
 def savetoindex(classroom, id, subject):
     try:
@@ -14,6 +16,7 @@ def savetoindex(classroom, id, subject):
                 index = json.load(f)
             index.append(id)
             with open(os.path.join(f'{getdatadir()}/vocab/{classroom}/{subject}/index.json'), "w") as f:
+                index = list(dict.fromkeys(index))
                 json.dump(index, f, indent=2)
             print("Success")
         except:
@@ -27,39 +30,39 @@ def savetoindex(classroom, id, subject):
 
 def save(subject, classroom, id, l1, l2):
     with suppress(Exception):
-        #print("H")
+        # print("H")
         os.mkdir(f"{getdatadir()}/vocab/" + classroom)
         os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
-        #print("I")
+        # print("I")
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         data = {l1: l2}
         json.dump(data, f)
         f.close()
-        #print("Hallo")
+        # print("Hallo")
         savetoindex(classroom, id, subject)
         return "Success"
     try:
         with suppress(Exception):
-            #print("J")
+            # print("J")
             f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
-            #print("K")
+            # print("K")
             data = json.load(f)
             f.close()
-        #print("ö")
+        # print("ö")
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         data.update({l1: l2})
         json.dump(data, f)
-        #print("Moin")
+        # print("Moin")
         savetoindex(classroom, id, subject)
-        #print("Kein Fehler")
+        # print("Kein Fehler")
         return "Success"
     except:
         f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
-        #print("Hallo")
+        # print("Hallo")
         data = {l1: l2}
         json.dump(data, f)
         f.close()
-        #print("Hallo")
+        # print("Hallo")
         savetoindex(classroom, id, subject)
         return "Success"
 
@@ -98,4 +101,3 @@ def filehandler(subject, classroom, id, file):
             return "Success"
     except Exception:
         return ic()
-
