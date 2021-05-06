@@ -31,7 +31,7 @@ def readresult(uid, subject):
         with open(f"{getdatadir()}/userdata/{uid}/{subject}.json", "r") as f:
             return json.load(f)
     except:
-        return "Error"
+        return "File not available"
 
 
 def delete(uid, subject):

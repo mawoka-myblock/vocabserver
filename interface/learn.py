@@ -21,20 +21,35 @@ def getvocab(classroom, subject, id):
     subject_word = []
     for items in vocab_undone.items():
         german.append(items[0]), subject_word.append(items[1])
-    random.shuffle(german)
-    random.shuffle(subject_word)
+    seed = random.random()
+    temporary = list(zip(german, subject_word))
+    random.shuffle(temporary)
+
+    german, subject_word = zip(*temporary)
 
 
 def getstats(subject):
     response = requests.get(f'{geturl()}/api/students/get-stats/{subject}/',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
-    return response.json()
+    if response.text == "File not available":
+        return "fnb"
+    else:
+        return response.json()
 
 @use_scope("First_scope")
 def inputgroup(subject):
     for i in range(len(german)):
+        put_text(f"{german[i]} is the same as {subject_word[i]}")
         input_group(f"Please enter the {subject} word!", [input(f"Input the {german[i]} word", name="word")])
-        put_text(i)
+        try:
+            stats = getstats(subject)
+            stats = stats[subject_word(i)]
+        except:
+            pass
+        #if input_group["word"] == getstats(subject)[german[i]]:
+        #    put_text("Richtig")
+        #else:
+        #    put_text("Falsch")
 
 
 def index(subject, classroom):
