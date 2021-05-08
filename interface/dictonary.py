@@ -6,7 +6,7 @@ import config
 from config import geturl
 import json
 from functools import partial
-import ui
+import interface.ui as ui
 
 def index(language):
     with use_scope("First_Scope", clear=True):

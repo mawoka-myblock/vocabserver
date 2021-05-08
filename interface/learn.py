@@ -1,12 +1,9 @@
 from pywebio.input import *
 from pywebio.output import *
-from pywebio.platform import *
 import requests
-import config
 from config import geturl
 import json
-from functools import partial
-import ui
+import interface.ui as ui
 import random
 from icecream import ic
 

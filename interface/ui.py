@@ -6,9 +6,9 @@ from pywebio.output import *
 from pywebio.platform import *
 
 from icecream import ic
-import create
-import dictonary
-import learn
+import interface.create
+import interface.dictonary
+import interface.learn
 from config import geturl
 
 
@@ -30,11 +30,11 @@ def convert_lang(word):
 def select_what_to_do():
     what_to_do = input_group("Was möchtest du machen?", [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"), select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
     if what_to_do["action"] == "Lernen":
-        learn.index(convert_lang(what_to_do["language"]), classroom)
+        interface.learn.index(convert_lang(what_to_do["language"]), classroom)
     elif what_to_do["action"] == "Erstellen":
-        create.index(convert_lang(what_to_do["language"]), token, classroom)                                 #convert_lang(what_to_do["language"])
+        interface.create.index(convert_lang(what_to_do["language"]), token, classroom)                                 #convert_lang(what_to_do["language"])
     elif what_to_do["action"] == "Wörterbuch":
-        dictonary.index(convert_lang(what_to_do["language"]))
+        interface.dictonary.index(convert_lang(what_to_do["language"]))
 
 
 def login():
@@ -71,4 +71,4 @@ def login():
 
 
 # start_server(login)
-start_server([login], port=5000)
+#start_server([login], port=5000)

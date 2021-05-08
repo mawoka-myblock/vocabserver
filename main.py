@@ -7,6 +7,10 @@ import students
 from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
 from fastapi.responses import ORJSONResponse
+from pywebio.platform.fastapi import webio_routes
+import interface.ui as ui
+from fastapi.staticfiles import StaticFiles
+
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 
@@ -71,3 +75,9 @@ async def index(subject: str, classroom: str, id: str, file: UploadFile = File(d
 
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 # app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))
+
+app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")
+app.mount("/css", StaticFiles(directory="static/css"), name="css")
+app.mount("/image", StaticFiles(directory="static/image"), name="image")
+app.mount("/js", StaticFiles(directory="static/js"), name="js")
+app.mount("/", FastAPI(routes=webio_routes(ui.login, cdn=False)))
