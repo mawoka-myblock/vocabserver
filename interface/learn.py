@@ -44,6 +44,7 @@ def inputgroup(subject):
         try:
             stats = getstats(subject)
             stats = stats[subject_word(i)]
+            put_text(stats)
         except:
             pass
         if words_entered["word"] == subject_word[i]:
