@@ -32,7 +32,7 @@ def getstats(subject):
     response = requests.get(f'{geturl()}/api/students/get-stats/{subject}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     if response.text == "File not available":
-        return "fnb"
+        return "fna"
     else:
         return response.json()
 
@@ -40,16 +40,16 @@ def getstats(subject):
 def inputgroup(subject):
     for i in range(len(german)):
         put_text(f"{german[i]} is the same as {subject_word[i]}")
-        input_group(f"Please enter the {subject} word!", [input(f"Input the {german[i]} word", name="word")])
+        words_entered = input_group(f"Please enter the {subject} word!", [input(f"Input the {german[i]} word", name="word")])
         try:
             stats = getstats(subject)
             stats = stats[subject_word(i)]
         except:
             pass
-        #if input_group["word"] == getstats(subject)[german[i]]:
-        #    put_text("Richtig")
-        #else:
-        #    put_text("Falsch")
+        if words_entered["word"] == subject_word[i]:
+            put_text("Richtig")
+        else:
+            put_text(f"Falsch, richtig wäre {subject_word[i]} gewesen, aber du hast '{words_entered['word']}' eingegeben.")
 
 
 def index(subject, classroom):
