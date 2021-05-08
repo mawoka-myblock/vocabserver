@@ -35,4 +35,5 @@ def getsecret():
 
 def geturl():
     config.read("config.ini")
-    return config["SERVER"]["Url"]
+    return config["FRONTEND"]["API_Url"]
+
