@@ -36,21 +36,55 @@ def getstats(subject):
     else:
         return response.json()
 
+
 @use_scope("First_scope")
 def inputgroup(subject):
     for i in range(len(german)):
         put_text(f"{german[i]} is the same as {subject_word[i]}")
-        words_entered = input_group(f"Please enter the {subject} word!", [input(f"Input the {german[i]} word", name="word")])
+        words_entered = input_group(f"Please enter the {subject} word!",
+                                    [input(f"Input the {german[i]} word", name="word")])
+        stats = getstats(subject)
         try:
-            stats = getstats(subject)
-            stats = stats[subject_word(i)]
-            put_text(stats)
+            if words_entered["word"] == subject_word[i]:
+                put_text("Richtig")
+                put_text(stats[subject_word[i]])
+                if int(stats[subject_word[i]]) > 0:
+                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                                             headers={'Content-Type': 'application/x-www-form-urlencoded',
+                                                      'Authorization': f'Bearer {ui.token}'},
+                                             data={'ltwo': subject_word[i], 'hdiw': int(stats[subject_word[i]]) - 1})
+                    put_text(response.text)
+                elif int(stats[subject_word[i]]) <= 0:
+                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                                             headers={'Content-Type': 'application/x-www-form-urlencoded',
+                                                      'Authorization': f'Bearer {ui.token}'},
+                                             data={'ltwo': subject_word[i], 'hdiw': 0})
+                    put_text(response.text)
+            else:
+                put_text(
+                    f"Falsch, richtig wäre {subject_word[i]} gewesen, aber du hast '{words_entered['word']}' eingegeben.")
+                if int(stats[subject_word[i]]) <= 0:
+                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                                             headers={'Content-Type': 'application/x-www-form-urlencoded',
+                                                      'Authorization': f'Bearer {ui.token}'},
+                                             data={'ltwo': subject_word[i], 'hdiw': int(stats[subject_word[i]]) + 1})
+                    put_text(response.text)
+                elif int(stats[subject_word[i]]) >= 3:
+                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                                             headers={'Content-Type': 'application/x-www-form-urlencoded',
+                                                      'Authorization': f'Bearer {ui.token}'},
+                                             data={'ltwo': subject_word[i], 'hdiw': 0})
+                    put_text(response.text)
+
         except:
-            pass
-        if words_entered["word"] == subject_word[i]:
-            put_text("Richtig")
-        else:
-            put_text(f"Falsch, richtig wäre {subject_word[i]} gewesen, aber du hast '{words_entered['word']}' eingegeben.")
+            put_text(subject_word[i])
+            response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                                     headers={'Content-Type': 'application/x-www-form-urlencoded',
+                                              'Authorization': f'Bearer {ui.token}'},
+                                     data={'ltwo': subject_word[i], 'hdiw': '3'})
+
+            put_text(response.text)
+
 
 
 def index(subject, classroom):
@@ -61,6 +95,3 @@ def index(subject, classroom):
         what_to_do = input("Bitte wähle das Kapitel aus!", datalist=json.loads(response.text))
         getvocab(classroom, subject, what_to_do)
         inputgroup(subject)
-
-
-

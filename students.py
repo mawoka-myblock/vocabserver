@@ -7,9 +7,7 @@ from config import getdatadir
 
 def saveresult(uid, ltwo, hdiw, subject):
     content = os.listdir(f"{getdatadir()}/userdata/{uid}")
-    print(content)
     try:
-        print("Hallo")
         with open(f'{getdatadir()}/userdata/{uid}/{subject}.json', "r") as f:
             data = json.load(f)
         data.update({ltwo: hdiw})
