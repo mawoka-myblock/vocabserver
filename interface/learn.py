@@ -29,7 +29,7 @@ def getvocab(classroom, subject, id):
 
 
 def getstats(subject):
-    response = requests.get(f'{geturl()}/api/students/get-stats/{subject}/',
+    response = requests.get(f'{geturl()}/api/students/get-stats/{subject}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     if response.text == "File not available":
         return "fnb"
