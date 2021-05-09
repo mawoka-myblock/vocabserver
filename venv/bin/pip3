@@ -1,4 +1,4 @@
-#!/home/mawoka/PycharmProjects/Vocab-Server/venv/bin/python
+#!/home/mawoka/PycharmProjects/vocab-server/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

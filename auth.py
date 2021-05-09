@@ -14,7 +14,7 @@ from config import getdatadir, getsecret, passwdlength
 FastAPIUsers = fastapi_users.FastAPIUsers
 
 app = FastAPI()
-DATABASE_URL = "sqlite:///users.db"
+DATABASE_URL = f"sqlite:///{getdatadir()}/users.db"
 SECRET = getsecret()
 metadata = sqlalchemy.MetaData()
 database = databases.Database(DATABASE_URL)
