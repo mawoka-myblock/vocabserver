@@ -1,7 +1,5 @@
-## Vocab-server
+# Vocab-server
 
-## Organisation
+[![Build Status](https://ci.mawoka.eu.org/api/badges/Mawoka/vocab-server/status.svg)](https://ci.mawoka.eu.org/Mawoka/vocab-server)
 
-- BOARD: https://boards.myblock.eu.org/b/7qcde2T4K3tL4WjcP/vocab-server
-
-- `Mawoka wrote it`
+Yes.
