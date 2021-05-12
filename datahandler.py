@@ -4,9 +4,9 @@ from contextlib import suppress
 global response
 from config import getdatadir
 import json
-import pickle
 import codecs
 from icecream import ic
+
 
 
 def savetoindex(classroom, id, subject):
@@ -29,6 +29,7 @@ def savetoindex(classroom, id, subject):
 
 
 def save(subject, classroom, id, l1, l2):
+    """
     with suppress(Exception):
         # print("H")
         os.mkdir(f"{getdatadir()}/vocab/" + classroom)
@@ -57,7 +58,9 @@ def save(subject, classroom, id, l1, l2):
         # print("Kein Fehler")
         return "Success"
     except:
-        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
+        f = open(os.pThe TLS protocol is used to encrypt communications across a network to ensure that transmitted data remains private. There are three released versions of TLS: 1.0, 1.1, and 1.2. All HTTPS connections use TLS.
+
+ath.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
         # print("Hallo")
         data = {l1: l2}
         json.dump(data, f)
@@ -65,6 +68,7 @@ def save(subject, classroom, id, l1, l2):
         # print("Hallo")
         savetoindex(classroom, id, subject)
         return "Success"
+        """
 
 
 def read(subject, classroom, id):

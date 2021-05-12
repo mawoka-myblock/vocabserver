@@ -37,3 +37,8 @@ def geturl():
     config.read("config.ini")
     return config["FRONTEND"]["API_Url"]
 
+def getdb():
+    config.read("config.ini")
+    return config["DATABASE"]["Connection_String"]
+
+print(f"CouchDB({getdb()})")

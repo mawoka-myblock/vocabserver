@@ -43,3 +43,4 @@ user-agents==2.2.0
 uvicorn==0.13.4
 websockets==9.0.1
 wrapt==1.12.1
+cloudant==2.14.0
