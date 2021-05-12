@@ -51,7 +51,7 @@ def login():
         classroom = login_fields["classroom"]
     else:
         print("Unexpected error in interface.ui.login!")
-    response = requests.post(f'{geturl()}/auth/jwt/login', headers={'accept': 'application/x-www-form-urlencoded',
+    response = requests.post(f'{geturl()}/api/v1/auth/jwt/login', headers={'accept': 'application/x-www-form-urlencoded',
                                                                     'Content-Type': 'application/x-www-form-urlencoded'},
                              data={'grant_type': '', 'username': f'{login_fields["mail"]}',
                                    'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
