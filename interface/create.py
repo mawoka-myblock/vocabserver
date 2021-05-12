@@ -18,7 +18,7 @@ def index(language, token, classroom):
         #ic(startgroup["file"]["filename"])
         #ic(startgroup["file"]["content"])
         try:
-            r = requests.post(f"{geturl()}/api/vocab/upload/{language}/{classroom}/{id}", headers={'accept': 'application/json', 'Authorization': f'Bearer {token}', 'Content-Type': 'multipart/form-data'}, data=startgroup["file"]["content"])
+            r = requests.post(f"{geturl()}/api/v1/vocab/upload/{language}/{classroom}/{id}", headers={'accept': 'application/json', 'Authorization': f'Bearer {token}', 'Content-Type': 'multipart/form-data'}, data=startgroup["file"]["content"])
             ic(r.text)
         except Exception:
             vocabhandler(language, token, classroom)
@@ -52,7 +52,7 @@ def vocabhandler(language, token, classroom):
             if confirm == "Submit":
                 length = len(lang1List)
                 for i in range(0, length):
-                    r = requests.post(f'{geturl()}/api/vocab/add-list/{language}/{classroom}/{id}', headers={'accept': 'application/x-www-form-urlencoded', 'Authorization': f'Bearer {token}'}, data={"lone": lang1List[i], "ltwo": lang2List[i]})
+                    r = requests.post(f'{geturl()}/api/v1/vocab/add-list/{language}/{classroom}/{id}', headers={'accept': 'application/x-www-form-urlencoded', 'Authorization': f'Bearer {token}'}, data={"lone": lang1List[i], "ltwo": lang2List[i]})
                     print(r.text)
                     put_text(r.text)
 

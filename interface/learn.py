@@ -11,7 +11,7 @@ from icecream import ic
 def getvocab(classroom, subject, id):
     global subject_word
     global german
-    response = requests.get(f'{geturl()}/api/vocab/read-list/{subject}/{classroom}/{id}',
+    response = requests.get(f'{geturl()}/api/v1/vocab/read-list/{subject}/{classroom}/{id}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     vocab_undone = json.loads(response.text)
     german = []
@@ -26,7 +26,7 @@ def getvocab(classroom, subject, id):
 
 
 def getstats(subject):
-    response = requests.get(f'{geturl()}/api/students/get-stats/{subject}',
+    response = requests.get(f'{geturl()}/api/v1/students/get-stats/{subject}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     if response.text == "File not available":
         return "fna"
@@ -46,13 +46,13 @@ def inputgroup(subject):
                 put_text("Richtig")
                 put_text(stats[subject_word[i]])
                 if int(stats[subject_word[i]]) > 0:
-                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                    response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': int(stats[subject_word[i]]) - 1})
                     put_text(response.text)
                 elif int(stats[subject_word[i]]) <= 0:
-                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                    response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': 0})
@@ -61,13 +61,13 @@ def inputgroup(subject):
                 put_text(
                     f"Falsch, richtig wäre {subject_word[i]} gewesen, aber du hast '{words_entered['word']}' eingegeben.")
                 if int(stats[subject_word[i]]) <= 0:
-                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                    response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': int(stats[subject_word[i]]) + 1})
                     put_text(response.text)
                 elif int(stats[subject_word[i]]) >= 3:
-                    response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+                    response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': 0})
@@ -75,7 +75,7 @@ def inputgroup(subject):
 
         except:
             put_text(subject_word[i])
-            response = requests.post(f'{geturl()}/api/students/write-stats/{subject}',
+            response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                      headers={'Content-Type': 'application/x-www-form-urlencoded',
                                               'Authorization': f'Bearer {ui.token}'},
                                      data={'ltwo': subject_word[i], 'hdiw': '3'})
@@ -85,7 +85,7 @@ def inputgroup(subject):
 
 
 def index(subject, classroom):
-    response = requests.get(f'{geturl()}/api/vocab/list-list/{subject}/{classroom}',
+    response = requests.get(f'{geturl()}/api/vocab/v1/list-list/{subject}/{classroom}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
 
     with use_scope('First_Scope', clear=True):
