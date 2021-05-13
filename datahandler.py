@@ -1,6 +1,6 @@
 import os
 from contextlib import suppress
-
+import re
 global response
 from config import getdatadir, getdb
 import json
@@ -9,23 +9,6 @@ from icecream import ic
 from cloudant.client import CouchDB
 
 
-def savetoindex(classroom, id, subject):
-    try:
-        try:
-            with open(os.path.join(f'{getdatadir()}/vocab/{classroom}/{subject}/index.json'), "r") as f:
-                index = json.load(f)
-            index.append(id)
-            with open(os.path.join(f'{getdatadir()}/vocab/{classroom}/{subject}/index.json'), "w") as f:
-                index = list(dict.fromkeys(index))
-                json.dump(index, f, indent=2)
-            print("Success")
-        except:
-            index = [id]
-            with open(os.path.join(f'{getdatadir()}/vocab/{classroom}/{subject}/index.json'), "w") as f:
-                json.dump(index, f, indent=2)
-            print("Success")
-    except:
-        print(ic())
 
 
 def save(subject, classlevel, id, l1, l2):
@@ -62,9 +45,16 @@ def getcontent(subject, classlevel):
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client[classlevel]
     liste = []
+    #re.findall()
     for i in db:
-        liste.append(i)
-    return liste
+        liste.append(i["_id"])
+    result = []
+    print(liste)
+    for i in liste:
+        print(i)
+        result.append(i.replace(f"{subject}:", ""))
+    return result
+    #return str(liste).replace(f"{subject}:", "")
 
 # Will return overview about available chapters
 
@@ -86,7 +76,7 @@ def filehandler(subject, classroom, id, file):
             file_decoded = codecs.decode(file, "UTF-8")
             ic(file_decoded)
             f.write(file_decoded)
-            savetoindex(classroom, id, subject)
+            #savetoindex(classroom, id, subject)
             return "Success"
     except Exception:
         return ic()
