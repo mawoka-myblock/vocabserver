@@ -10,7 +10,9 @@ from cloudant.client import CouchDB
 
 client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
 global db
-#db = client["vocab"]
+
+
+# db = client["vocab"]
 
 def savetoindex(classroom, id, subject):
     try:
@@ -46,24 +48,16 @@ def save(subject, classroom, id, l1, l2):
             return "Couldn't create Document"
 
 
-
-
-
 def read(subject, classroom, id):
-    try:
-        with open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + "/" + id + '.json'), "r") as f:
-            return json.load(f)
-    except:
-        return ic()
+    db = client["seven"]
+    doc = db[":".join((subject, id))]
+    del doc["_id"]
+    del doc["_rev"]
+    return doc
 
 
 def getcontent(subject, classroom):
-    try:
-        with open(os.path.join(f'./{getdatadir()}/vocab/{classroom}/{subject}/index.json'), "r") as f:
-            index = json.load(f)
-        return index
-    except Exception:
-        return ic()
+    pass
 
 
 # TODO: NEU MACHEN!!!
