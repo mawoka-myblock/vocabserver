@@ -37,8 +37,14 @@ def geturl():
     config.read("config.ini")
     return config["FRONTEND"]["API_Url"]
 
-def getdb():
+def getdb(arg):
     config.read("config.ini")
-    return config["DATABASE"]["Connection_String"]
-
-print(f"CouchDB({getdb()})")
+    if arg == "uname":
+        return config["DATABASE"]["Username"]
+    elif arg == "passwd":
+        return config["DATABASE"]["Password"]
+    elif arg == "url":
+        return config["DATABASE"]["Url"]
+    else:
+        print("Wrong Arg")
+        exit()

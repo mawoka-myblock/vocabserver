@@ -2,12 +2,15 @@ import os
 from contextlib import suppress
 
 global response
-from config import getdatadir
+from config import getdatadir, getdb
 import json
 import codecs
 from icecream import ic
+from cloudant.client import CouchDB
 
-
+client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+global db
+#db = client["vocab"]
 
 def savetoindex(classroom, id, subject):
     try:
@@ -29,46 +32,21 @@ def savetoindex(classroom, id, subject):
 
 
 def save(subject, classroom, id, l1, l2):
-    """
-    with suppress(Exception):
-        # print("H")
-        os.mkdir(f"{getdatadir()}/vocab/" + classroom)
-        os.mkdir(f"{getdatadir()}/vocab/" + classroom + "/" + subject)
-        # print("I")
-        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
-        data = {l1: l2}
-        json.dump(data, f)
-        f.close()
-        # print("Hallo")
-        savetoindex(classroom, id, subject)
+    db = client["seven"]
+    if f"{subject}:{id}" in db:
+        doc = db[f"{subject}:{id}"]
+        doc[l1] = l2
+        doc.save()
         return "Success"
-    try:
-        with suppress(Exception):
-            # print("J")
-            f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "r")
-            # print("K")
-            data = json.load(f)
-            f.close()
-        # print("ö")
-        f = open(os.path.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
-        data.update({l1: l2})
-        json.dump(data, f)
-        # print("Moin")
-        savetoindex(classroom, id, subject)
-        # print("Kein Fehler")
-        return "Success"
-    except:
-        f = open(os.pThe TLS protocol is used to encrypt communications across a network to ensure that transmitted data remains private. There are three released versions of TLS: 1.0, 1.1, and 1.2. All HTTPS connections use TLS.
+    elif f"{subject}:{id}" not in db:
+        db.create_document({"_id": ":".join((subject, id)), l1: l2})
+        if f"{subject}:{id}" in db:
+            return "Success"
+        else:
+            return "Couldn't create Document"
 
-ath.join(f'{getdatadir()}/vocab/' + classroom + '/' + subject + '/' + id + ".json"), "w")
-        # print("Hallo")
-        data = {l1: l2}
-        json.dump(data, f)
-        f.close()
-        # print("Hallo")
-        savetoindex(classroom, id, subject)
-        return "Success"
-        """
+
+
 
 
 def read(subject, classroom, id):
