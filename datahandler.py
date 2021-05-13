@@ -8,11 +8,6 @@ import codecs
 from icecream import ic
 from cloudant.client import CouchDB
 
-#client = CouchDB(getdb("uname"), getdb("passwd"), url="https://bin.muetsch.io/01o79gm", connect=True)
-global db
-
-
-# db = client["vocab"]
 
 def savetoindex(classroom, id, subject):
     try:
@@ -33,9 +28,9 @@ def savetoindex(classroom, id, subject):
         print(ic())
 
 
-def save(subject, classroom, id, l1, l2):
+def save(subject, classlevel, id, l1, l2):
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-    db = client["seven"]
+    db = client[classlevel]
     if f"{subject}:{id}" in db:
         doc_save = db[f"{subject}:{id}"]
         document = doc_save
@@ -52,9 +47,9 @@ def save(subject, classroom, id, l1, l2):
     client.disconnect()
 
 
-def read(subject, classroom, id):
+def read(subject, classlevel, id):
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-    db = client["seven"]
+    db = client[classlevel]
     doc = db[":".join((subject, id))]
     del doc["_id"]
     del doc["_rev"]
@@ -63,15 +58,26 @@ def read(subject, classroom, id):
     client.disconnect()
 
 
-def getcontent(subject, classroom):
-    pass
+def getcontent(subject, classlevel):
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+    db = client[classlevel]
+    liste = []
+    for i in db:
+        liste.append(i)
+    return liste
+
+# Will return overview about available chapters
 
 
-# TODO: NEU MACHEN!!!
 
-
-def editcontent(subject, classroom, id, lone, ltwo):
-    return "NEEDS TO BE DONE AFTER WRITING STH ELSE IN JSON!!!"
+def editcontent(subject, classlevel, id, lone, ltwo):
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+    db = client[classlevel]
+    doc = db[":".join((subject, id))]
+    doc[lone] = ltwo
+    doc.save()
+    client.disconnect()
+    return "Success"
 
 
 def filehandler(subject, classroom, id, file):

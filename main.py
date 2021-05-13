@@ -44,6 +44,7 @@ async def update_item(subject: str, classroom: str, id: str, lone: str = Form(de
 @app.get("/api/v1/vocab/list-list/{subject}/{classroom}", tags=["vocabapi"])
 async def index(classroom: str, subject: str, user: User = Depends(verified_user)):
     return JSONResponse(content=datahandler.getcontent(subject, classroom))
+# Will return overview about available chapters
 
 
 @app.post("/api/v1/students/write-stats/{subject}", tags=["students"])
