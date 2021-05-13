@@ -8,7 +8,7 @@ import codecs
 from icecream import ic
 from cloudant.client import CouchDB
 
-client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+#client = CouchDB(getdb("uname"), getdb("passwd"), url="https://bin.muetsch.io/01o79gm", connect=True)
 global db
 
 
@@ -34,11 +34,14 @@ def savetoindex(classroom, id, subject):
 
 
 def save(subject, classroom, id, l1, l2):
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client["seven"]
     if f"{subject}:{id}" in db:
-        doc = db[f"{subject}:{id}"]
-        doc[l1] = l2
-        doc.save()
+        doc_save = db[f"{subject}:{id}"]
+        document = doc_save
+        document[l1] = l2
+        document.save()
+        del document
         return "Success"
     elif f"{subject}:{id}" not in db:
         db.create_document({"_id": ":".join((subject, id)), l1: l2})
@@ -46,14 +49,18 @@ def save(subject, classroom, id, l1, l2):
             return "Success"
         else:
             return "Couldn't create Document"
+    client.disconnect()
 
 
 def read(subject, classroom, id):
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client["seven"]
     doc = db[":".join((subject, id))]
     del doc["_id"]
     del doc["_rev"]
     return doc
+    del doc
+    client.disconnect()
 
 
 def getcontent(subject, classroom):

@@ -1,15 +1,14 @@
 import os
 
-from config import getdatadir
+from config import getdatadir, getdb
 from contextlib import suppress
+from cloudant import CouchDB
 
-
+client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
 print("Creating Database structure...")
 with suppress(Exception):
-    os.mkdir(getdatadir())
+    client.create_database("userdata", partitioned=True)
 with suppress(Exception):
-    os.mkdir(f"{getdatadir()}/userdata")
-with suppress(Exception):
-    os.mkdir(f"{getdatadir()}/vocab")
+    client.create_database("vocab", partitioned=True)
 
 print("Done!")
