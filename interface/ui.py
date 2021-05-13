@@ -24,9 +24,6 @@ def convert_lang(word):
         return "error"
 
 
-
-
-
 def select_what_to_do():
     what_to_do = input_group("Was möchtest du machen?", [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"), select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
     if what_to_do["action"] == "Lernen":
@@ -43,6 +40,7 @@ def login():
                                 input("Dein Pasword", name="password", type="password"),
                                 input("Deinen Klassenraum", name="classroom")])
     global classroom
+    """
     if len(login_fields["classroom"]) == 1:
         classroom = "00" + login_fields["classroom"]
     elif len(login_fields["classroom"]) == 2:
@@ -51,6 +49,8 @@ def login():
         classroom = login_fields["classroom"]
     else:
         print("Unexpected error in interface.ui.login!")
+    """
+    classroom = login_fields["classroom"]
     response = requests.post(f'{geturl()}/api/v1/auth/jwt/login', headers={'accept': 'application/x-www-form-urlencoded',
                                                                     'Content-Type': 'application/x-www-form-urlencoded'},
                              data={'grant_type': '', 'username': f'{login_fields["mail"]}',

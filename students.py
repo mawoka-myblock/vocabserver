@@ -2,35 +2,38 @@ import json
 import os
 
 global data
-from config import getdatadir
+from config import getdatadir, getdb
+from cloudant import CouchDB
 
+client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
 
 def saveresult(uid, ltwo, hdiw, subject):
-    content = os.listdir(f"{getdatadir()}/userdata/{uid}")
-    try:
-        with open(f'{getdatadir()}/userdata/{uid}/{subject}.json', "r") as f:
-            data = json.load(f)
-        data.update({ltwo: hdiw})
-        with open(f'{getdatadir()}/userdata/{uid}/{subject}.json', "w") as f:
-            json.dump(data, f)
-        return "Success"
-    except:
-        try:
-            with open(f'{getdatadir()}/userdata/{uid}/{subject}.json', "w") as f:
-                data = {ltwo: hdiw}
-                json.dump(data, f)
-            return "Success"
-        except:
-            return "Error"
-
+    print(uid)
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+    db = client["userdata"]
+    if f"{uid}:{subject}" in db:
+        doc_sr = db[f"{uid}:{subject}"]
+        document_lol = doc_sr
+        document_lol[ltwo] = hdiw
+        document_lol.save()
+        del document_lol
+    elif f"{uid}:{subject}" not in db:
+        uid = str(uid)
+        db.create_document({"_id": ":".join((uid, subject)), ltwo: hdiw})
+    return "Success or not"
+    client.disconnect()
 
 def readresult(uid, subject):
-    try:
-        with open(f"{getdatadir()}/userdata/{uid}/{subject}.json", "r") as f:
-            return json.load(f)
-    except:
-        return "File not available"
-
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+    db = client["userdata"]
+    doc_rr = db[":".join((str(uid), subject))]
+    document = doc_rr
+    print(document)
+    if "_id" in document:
+        del document["_id"]
+        del document["_rev"]
+    return document
+    client.disconnect()
 
 def delete(uid, subject):
     try:

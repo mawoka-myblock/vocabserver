@@ -85,7 +85,7 @@ def inputgroup(subject):
 
 
 def index(subject, classroom):
-    response = requests.get(f'{geturl()}/api/vocab/v1/list-list/{subject}/{classroom}',
+    response = requests.get(f'{geturl()}/api/v1/vocab/list-list/{subject}/{classroom}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
 
     with use_scope('First_Scope', clear=True):

@@ -1,7 +1,7 @@
 aiofiles==0.6.0
 aiosqlite==0.16.1
 asttokens==2.0.5
-bcrypt==3.2.0
+bcrypt
 certifi==2020.12.5
 cffi==1.14.5
 chardet==4.0.0
@@ -43,3 +43,4 @@ user-agents==2.2.0
 uvicorn==0.13.4
 websockets==9.0.1
 wrapt==1.12.1
+cloudant==2.14.0

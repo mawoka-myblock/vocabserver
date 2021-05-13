@@ -1,5 +1,5 @@
 import configparser
-
+import os
 config = configparser.ConfigParser()
 
 config['DIRECTORY'] = {'Data': './data'}
@@ -37,3 +37,16 @@ def geturl():
     config.read("config.ini")
     return config["FRONTEND"]["API_Url"]
 
+def getdb(arg):
+    os.getenv("CouchDB_USERNAME", "admin")
+
+    config.read("config.ini")
+    if arg == "uname":
+        return os.getenv("CouchDB_USERNAME", "admin")
+    elif arg == "passwd":
+        return os.getenv("CouchDB_PASSWORD", "password")
+    elif arg == "url":
+        return os.getenv("CouchDB_URL", "http://0.0.0.0:5984")
+    else:
+        print("Wrong Arg")
+        exit()

@@ -1,0 +1,39 @@
+version: "3"
+volumes:
+  couchdb_data:
+
+
+
+services:
+  couchdb:
+    image: couchdb:3.1.1
+    container_name: CouchDB
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+      #- ${DOCKER_VOLUMES_BASEPATH}/couchdb_log:/var/log/couchdb
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+    ports:
+      - "5984:5984"
+    restart:
+      unless-stopped
+    networks:
+      - appnet
+
+  vocabserver:
+    build: .
+    container_name: VocabServer
+    restart:
+      unless-stopped
+    depends_on:
+      - couchdb
+    ports:
+    - "8000:80"
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    name: appnet
+

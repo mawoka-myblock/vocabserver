@@ -44,6 +44,7 @@ async def update_item(subject: str, classroom: str, id: str, lone: str = Form(de
 @app.get("/api/v1/vocab/list-list/{subject}/{classroom}", tags=["vocabapi"])
 async def index(classroom: str, subject: str, user: User = Depends(verified_user)):
     return JSONResponse(content=datahandler.getcontent(subject, classroom))
+# Will return overview about available chapters
 
 
 @app.post("/api/v1/students/write-stats/{subject}", tags=["students"])
@@ -75,6 +76,7 @@ async def index(subject: str, classroom: str, id: str, file: UploadFile = File(d
 
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 # app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))
+
 
 app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")
 app.mount("/css", StaticFiles(directory="static/css"), name="css")
