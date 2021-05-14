@@ -16,6 +16,11 @@ from pywebio.platform.fastapi import webio_routes
 import interface.ui as ui
 from fastapi.staticfiles import StaticFiles
 import initialisation
+import verifymail
+
+
+
+
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 initialisation.init(True)
