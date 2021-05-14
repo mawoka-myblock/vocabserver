@@ -32,25 +32,25 @@ def select_what_to_do():
         interface.create.index(convert_lang(what_to_do["language"]), token, classroom)                                 #convert_lang(what_to_do["language"])
     elif what_to_do["action"] == "Wörterbuch":
         interface.dictonary.index(convert_lang(what_to_do["language"]))
-
+def check_classlevel(classlevel):
+    global classroom
+    if classlevel == "5":
+        classroom = "five"
+    elif classlevel == "6":
+        classroom = "six"
+    elif classlevel == "7":
+        classroom = "seven"
+    elif classlevel == "8":
+        classroom = "eight"
+    else:
+        return "Please enter a classleve between 5 and 8."
 
 def login():
     login_fields = input_group("Bitte einloggen!",
                                [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
                                 input("Dein Pasword", name="password", type="password"),
-                                input("Deinen Klassenraum", name="classroom")])
-    global classroom
-    """
-    if len(login_fields["classroom"]) == 1:
-        classroom = "00" + login_fields["classroom"]
-    elif len(login_fields["classroom"]) == 2:
-        classroom = "0" + login_fields["classroom"]
-    elif len(login_fields["classroom"]) == 3:
-        classroom = login_fields["classroom"]
-    else:
-        print("Unexpected error in interface.ui.login!")
-    """
-    classroom = login_fields["classroom"]
+                                input("Deinen Klassenraum", name="classroom", validate=check_classlevel)])
+
     response = requests.post(f'{geturl()}/api/v1/auth/jwt/login', headers={'accept': 'application/x-www-form-urlencoded',
                                                                     'Content-Type': 'application/x-www-form-urlencoded'},
                              data={'grant_type': '', 'username': f'{login_fields["mail"]}',
