@@ -1,4 +1,10 @@
 import os
+import sentry_sdk
+sentry_sdk.init(
+    "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
+    traces_sample_rate=1.0
+)
+import smtplib
 
 import databases
 import sqlalchemy
@@ -10,6 +16,7 @@ from fastapi_users import models
 from fastapi_users.authentication import JWTAuthentication
 
 from config import getdatadir, getsecret, passwdlength
+import verifymail
 
 FastAPIUsers = fastapi_users.FastAPIUsers
 
@@ -59,6 +66,9 @@ def verification(uid, token):
 
 def after_verification_request(user: UserDB, token: str, request: Request):
     print(f"Verification requested for user {user.id}. Verification token: {token}")
+    #sender = "<vocabserver@lol.org>"
+    #receiver = f"<{user.email}>"
+    verifymail.sendmail(user.email, token)
 
 
 def on_after_register(user: UserDB, request: Request):
