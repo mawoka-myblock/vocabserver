@@ -82,6 +82,13 @@ async def index(subject: str, classroom: str, id: str, file: UploadFile = File(d
 
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 # app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))
+@app.get("/api/v1/user/verifymail/{verify_id}", tags=["users"])
+async def index(verify_id: str):
+    return verifymail.verify(verify_id)
+
+@app.get("/api/v1/user/startverify/{usermail}", tags=["users"])
+async def index(usermail: str):
+    return verifymail.requestverify(usermail)
 
 
 app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")
