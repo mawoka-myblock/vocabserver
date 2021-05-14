@@ -10,9 +10,10 @@ from fastapi.responses import ORJSONResponse
 from pywebio.platform.fastapi import webio_routes
 import interface.ui as ui
 from fastapi.staticfiles import StaticFiles
-
+import initialisation
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
+initialisation.init()
 
 jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/api/v1/auth/jwt/login")
 

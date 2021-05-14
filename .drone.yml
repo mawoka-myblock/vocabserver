@@ -4,6 +4,14 @@ name: default
 steps:
 - name: docker  
   image: plugins/docker
+  environment:
+   CouchDB_URL:
+    from_secret: couchdb_url
+   CouchDB_PASSWORD:
+    from_secret: couchdb_password
+   CouchDB_USERNAME:
+    from_secret: couchdb_user
+
   settings:
     username: 
         from_secret: docker_username
@@ -11,6 +19,10 @@ steps:
         from_secret: docker_password
     repo: mawokamyblock/vocabserver
     tags: dev
+    build_args:
+     - CouchDB_URL
+     - CouchDB_PASSWORD
+     - CouchDB_USERNAME
   when:
     branch:
       - master

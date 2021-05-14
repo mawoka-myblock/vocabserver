@@ -14,8 +14,8 @@ services:
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=password
-    ports:
-      - "5984:5984"
+#    ports:
+#      - "5984:5984"
     restart:
       unless-stopped
     networks:
@@ -23,17 +23,24 @@ services:
 
   vocabserver:
     build: .
-    container_name: VocabServer
+    container_name: vocabserver
     restart:
       unless-stopped
     depends_on:
-      - couchdb
+      couchdb:
+        condition: service_started
     ports:
     - "8000:80"
     networks:
       - appnet
 
+
+
 networks:
   appnet:
     name: appnet
+
+
+
+
 
