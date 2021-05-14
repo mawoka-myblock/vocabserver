@@ -3,8 +3,9 @@ from contextlib import suppress
 from cloudant import CouchDB
 years = ["five", "six", "seven", "eight"]
 
-def init():
-    print("INIT PROCESS")
+def init(no_log):
+    if not no_log:
+        print("INIT PROCESS")
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     #print("Creating Database structure...")
     with suppress(Exception):

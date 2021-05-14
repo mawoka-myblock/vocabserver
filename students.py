@@ -26,14 +26,21 @@ def saveresult(uid, ltwo, hdiw, subject):
 def readresult(uid, subject):
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client["userdata"]
-    doc_rr = db[":".join((str(uid), subject))]
-    document = doc_rr
-    print(document)
-    if "_id" in document:
-        del document["_id"]
-        del document["_rev"]
-    return document
-    client.disconnect()
+    if f"{uid}:{subject}" in db:
+        doc_rr = db[":".join((str(uid), subject))]
+        document = doc_rr
+        if "_id" in document:
+            del document["_id"]
+            del document["_rev"]
+        return document
+        client.disconnect()
+    else:
+        return "File not available"
+    #elif f"{uid}:{subject}" not in db:
+    #    db.create_document({"_id": ":".join((uid, subject))})
+
+
+
 
 def delete(uid, subject):
     try:
