@@ -26,6 +26,7 @@ app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 initialisation.init(True)
 
 jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/api/v1/auth/jwt/login")
+jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=1209600, tokenUrl="/api/v1/auth/jwt/stay-login")
 
 fastapi_users = auth.FastAPIUsers(auth.user_db, [jwt_authentication], User, auth.UserCreate, auth.UserUpdate,
                                   auth.UserDB, )
