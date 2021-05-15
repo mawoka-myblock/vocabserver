@@ -4,20 +4,22 @@ sentry_sdk.init(
     "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
     traces_sample_rate=1.0
 )
+import asyncio
 import json
 from sentry_sdk import capture_message
-
+from cloudant.client import CouchDB
 from contextlib import suppress
 import requests
 from pywebio.input import *
 from pywebio.output import *
-from pywebio.platform import *
-
+from pywebio.session import *
+import random
+import string
 from icecream import ic
 import interface.create
 import interface.dictonary
 import interface.learn
-from config import geturl
+from config import geturl, getdb
 
 
 def convert_lang(word):
@@ -32,7 +34,7 @@ def convert_lang(word):
         return "error"
 
 
-def select_what_to_do():
+async def select_what_to_do():
     what_to_do = input_group("Was möchtest du machen?",
                              [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"),
                               select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
@@ -62,7 +64,32 @@ def check_classlevel(classlevel):
 def login():
     already_logged_in = actions("Already logged in?", ["Yes", "No"])
     if already_logged_in == "Yes":
-        put_text("HALLO")
+        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+        db = client["userdata"]
+        #javascript = run_js("""(function(){
+        #var loginid = localStorage.getItem('login_id');
+        #console.log(loginid);
+        #console.log(lol);
+        #return loginid;
+        #});
+        #""", lol="HALLO")
+        #print(javascript)
+        #run_js("console.log('HALLO')")
+        #current_url = eval_js("window.location.href")
+
+        run_js('''(function(){
+            var loginid = localStorage.getItem('login_id');
+            rqcontent = "loginid=" + loginid;
+            url = url + "?loginid=" + loginid;
+            console.log(rqcontent)
+            request = {};
+            console.log(loginid, url);
+            request = new XMLHttpRequest();
+            request.open("POST", url, true);
+            request.setRequestHeader("Content-Type", "application/json", "Access-Control-Allow-Origin:", "*");
+            request.send();
+        })()''', b=100, url="http://127.0.0.1:8000/api/v1/auth/stay-signed-id")
+        #put_text(function_res)
     login_fields = input_group("Bitte einloggen!",
                                [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
                                 input("Dein Pasword", name="password", type="password"),

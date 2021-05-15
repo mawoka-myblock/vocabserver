@@ -98,6 +98,10 @@ async def index(verify_id: str):
 async def index(usermail: str):
     return verifymail.requestverify(usermail)
 
+@app.post("/api/v1/auth/stay-signed-id", tags=["auth"])
+async def index(loginid: str):
+    print(loginid)
+
 
 app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")
 app.mount("/css", StaticFiles(directory="static/css"), name="css")
