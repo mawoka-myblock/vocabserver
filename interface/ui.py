@@ -1,5 +1,12 @@
+import sentry_sdk
+sentry_sdk.init(
+    "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
+    traces_sample_rate=1.0
+)
 import json
+from sentry_sdk import capture_message
 
+from contextlib import suppress
 import requests
 from pywebio.input import *
 from pywebio.output import *
@@ -56,19 +63,33 @@ def login():
                              data={'grant_type': '', 'username': f'{login_fields["mail"]}',
                                    'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
                                    'client_secret': ''})
+
     with use_scope('First_Scope', clear=True):
-        try:
+        with suppress(Exception):
             if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
                 put_error("Falsche Anmeldedaten!")
                 login()
+            else:
+                put_error("Unknown error!")
+                capture_message('Something went wrong')
 
-        except:
+        with suppress(Exception):
+            if "Unauthorized" == json.loads(response.text)["detail"]:
+                put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
+            else:
+                put_error("Unknown error!")
+                capture_message('Something went wrong')
+
+        with suppress(Exception):
             if "bearer" == json.loads(response.text)["token_type"]:
                 global token
                 token = json.loads(response.text)["access_token"]
                 put_success("Logged in succesfully!")
+                print(token)
                 select_what_to_do()
-
+            else:
+                put_error("Unknown error!")
+                capture_message('Something went wrong')
 
 # start_server(login)
 #start_server([login], port=5000)
