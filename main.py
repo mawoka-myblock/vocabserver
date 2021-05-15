@@ -100,7 +100,7 @@ async def index(usermail: str):
 
 @app.post("/api/v1/auth/stay-signed-id", tags=["auth"])
 async def index(loginid: str):
-    print(loginid)
+    datahandler.stayloggedin(loginid)
 
 
 app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")

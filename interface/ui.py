@@ -20,6 +20,15 @@ import interface.create
 import interface.dictonary
 import interface.learn
 from config import geturl, getdb
+global email, password
+from time import sleep
+
+def getuserdata(email, password):
+    #register_thread()
+    email = email
+    password = password
+    ic(email, password)
+
 
 
 def convert_lang(word):
@@ -77,7 +86,7 @@ def login():
         #run_js("console.log('HALLO')")
         #current_url = eval_js("window.location.href")
 
-        run_js('''(function(){
+        js = run_js('''(function(){
             var loginid = localStorage.getItem('login_id');
             rqcontent = "loginid=" + loginid;
             url = url + "?loginid=" + loginid;
@@ -88,19 +97,44 @@ def login():
             request.open("POST", url, true);
             request.setRequestHeader("Content-Type", "application/json", "Access-Control-Allow-Origin:", "*");
             request.send();
-        })()''', b=100, url="http://127.0.0.1:8000/api/v1/auth/stay-signed-id")
-        #put_text(function_res)
-    login_fields = input_group("Bitte einloggen!",
-                               [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
-                                input("Dein Pasword", name="password", type="password"),
-                                input("Deinen Klassenraum", name="classroom", validate=check_classlevel)])
+            return rqcontent;
+        })()''', url="http://127.0.0.1:8000/api/v1/auth/stay-signed-id")
 
-    response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
-                             headers={'accept': 'application/x-www-form-urlencoded',
-                                      'Content-Type': 'application/x-www-form-urlencoded'},
-                             data={'grant_type': '', 'username': f'{login_fields["mail"]}',
-                                   'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
-                                   'client_secret': ''})
+        #put_text(eval_js("window.location.href"))
+        sleep(1)
+        email = local.email
+        password = local.password
+        put_text(local.email, local.password)
+        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                 headers={'accept': 'application/x-www-form-urlencoded',
+                                          'Content-Type': 'application/x-www-form-urlencoded'},
+                                 data={'grant_type': '', 'username': f'{email}',
+                                       'password': f'{password}', 'scope': '', 'client_id': '',
+                                       'client_secret': ''})
+    try:
+        ic(password, email)
+        print(password, email)
+        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                 headers={'accept': 'application/x-www-form-urlencoded',
+                                          'Content-Type': 'application/x-www-form-urlencoded'},
+                                 data={'grant_type': '', 'username': f'{email}',
+                                       'password': f'{password}', 'scope': '', 'client_id': '',
+                                       'client_secret': ''})
+        put_text(response.text)
+    except:
+        ic()
+        #put_text(function_res)
+        login_fields = input_group("Bitte einloggen!",
+                                   [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
+                                    input("Dein Pasword", name="password", type="password"),
+                                    input("Deinen Klassenraum", name="classroom", validate=check_classlevel)])
+
+        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                 headers={'accept': 'application/x-www-form-urlencoded',
+                                          'Content-Type': 'application/x-www-form-urlencoded'},
+                                 data={'grant_type': '', 'username': f'{login_fields["mail"]}',
+                                       'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
+                                       'client_secret': ''})
 
     with use_scope('First_Scope', clear=True):
         with suppress(Exception):

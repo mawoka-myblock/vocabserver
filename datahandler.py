@@ -4,6 +4,8 @@ sentry_sdk.init(
     "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
     traces_sample_rate=1.0
 )
+from cryptography.fernet import Fernet
+
 import os
 from contextlib import suppress
 import re
@@ -13,6 +15,9 @@ import json
 import codecs
 from icecream import ic
 from cloudant.client import CouchDB
+import interface.ui as ui
+import os
+from auth import SECRET
 
 
 
@@ -86,3 +91,18 @@ def filehandler(subject, classroom, id, file):
             return "Success"
     except Exception:
         return ic()
+
+def stayloggedin(id):
+    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+    db = client["userdata"]
+    doc = db[":".join(("stayin", id))]
+    del doc["_id"]
+    del doc["_rev"]
+    ui.getuserdata(doc["email"], doc["password"])
+    print(doc)
+    """doc_save = db[f"stayin:{id}"]
+    document = doc_save
+    document["username"] = 
+    document.save()
+    del document
+    return "Success"""""
