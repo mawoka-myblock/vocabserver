@@ -1,4 +1,5 @@
 import sentry_sdk
+sentry_sdk.init(environment="development")
 sentry_sdk.init(
     "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
     traces_sample_rate=1.0
@@ -32,13 +33,18 @@ def convert_lang(word):
 
 
 def select_what_to_do():
-    what_to_do = input_group("Was möchtest du machen?", [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"), select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
+    what_to_do = input_group("Was möchtest du machen?",
+                             [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"),
+                              select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
     if what_to_do["action"] == "Lernen":
         interface.learn.index(convert_lang(what_to_do["language"]), classroom)
     elif what_to_do["action"] == "Erstellen":
-        interface.create.index(convert_lang(what_to_do["language"]), token, classroom)                                 #convert_lang(what_to_do["language"])
+        interface.create.index(convert_lang(what_to_do["language"]), token,
+                               classroom)  # convert_lang(what_to_do["language"])
     elif what_to_do["action"] == "Wörterbuch":
         interface.dictonary.index(convert_lang(what_to_do["language"]))
+
+
 def check_classlevel(classlevel):
     global classroom
     if classlevel == "5":
@@ -52,14 +58,19 @@ def check_classlevel(classlevel):
     else:
         return "Please enter a classleve between 5 and 8."
 
+
 def login():
+    already_logged_in = actions("Already logged in?", ["Yes", "No"])
+    if already_logged_in == "Yes":
+        put_text("HALLO")
     login_fields = input_group("Bitte einloggen!",
                                [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
                                 input("Dein Pasword", name="password", type="password"),
                                 input("Deinen Klassenraum", name="classroom", validate=check_classlevel)])
 
-    response = requests.post(f'{geturl()}/api/v1/auth/jwt/login', headers={'accept': 'application/x-www-form-urlencoded',
-                                                                    'Content-Type': 'application/x-www-form-urlencoded'},
+    response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                             headers={'accept': 'application/x-www-form-urlencoded',
+                                      'Content-Type': 'application/x-www-form-urlencoded'},
                              data={'grant_type': '', 'username': f'{login_fields["mail"]}',
                                    'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
                                    'client_secret': ''})
@@ -92,4 +103,4 @@ def login():
                 capture_message('Something went wrong')
 
 # start_server(login)
-#start_server([login], port=5000)
+# start_server([login], port=5000)
