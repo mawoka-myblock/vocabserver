@@ -75,40 +75,13 @@ def login():
     if already_logged_in == "Yes":
         #client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
         #db = client["userdata"]
-        #javascript = run_js("""(function(){
-        #var loginid = localStorage.getItem('login_id');
-        #console.log(loginid);
-        #console.log(lol);
-        #return loginid;
-        #});
-        #""", lol="HALLO")
-        #print(javascript)
-        #run_js("console.log('HALLO')")
-        #current_url = eval_js("window.location.href")
+
         val = eval_js("localStorage.getItem('login_id')")
         print(val)
         #output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
 
-
-        js = run_js('''(function(){
-            var loginid = localStorage.getItem('login_id');
-            rqcontent = "loginid=" + loginid;
-            url = url + "?loginid=" + loginid;
-            console.log(rqcontent)
-            request = {};
-            console.log(loginid, url);
-            request = new XMLHttpRequest();
-            request.open("POST", url, true);
-            request.setRequestHeader("Content-Type", "application/json", "Access-Control-Allow-Origin:", "*");
-            request.send();
-            return rqcontent;
-        })()''', url="http://127.0.0.1:8000/api/v1/auth/stay-signed-id")
-
         #put_text(eval_js("window.location.href"))
-        sleep(1)
-        email = local.email
-        password = local.password
-        put_text(local.email, local.password)
+        put_text(val)
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
                                           'Content-Type': 'application/x-www-form-urlencoded'},
@@ -116,8 +89,6 @@ def login():
                                        'password': f'{password}', 'scope': '', 'client_id': '',
                                        'client_secret': ''})
     try:
-        ic(password, email)
-        print(password, email)
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
                                           'Content-Type': 'application/x-www-form-urlencoded'},
