@@ -92,17 +92,12 @@ def filehandler(subject, classroom, id, file):
     except Exception:
         return ic()
 
-def stayloggedin(id):
+def stayloggedin(loginid, id):
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client["userdata"]
-    doc = db[":".join(("stayin", id))]
-    del doc["_id"]
-    del doc["_rev"]
-    ui.getuserdata(doc["email"], doc["password"])
-    print(doc)
-    """doc_save = db[f"stayin:{id}"]
+    doc_save = db[f"stayin:{id}"]
     document = doc_save
-    document["username"] = 
+    document["loginid"] = loginid
     document.save()
-    del document
-    return "Success"""""
+    del document, doc_save
+    return "Success"

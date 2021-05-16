@@ -73,8 +73,8 @@ def check_classlevel(classlevel):
 def login():
     already_logged_in = actions("Already logged in?", ["Yes", "No"])
     if already_logged_in == "Yes":
-        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-        db = client["userdata"]
+        #client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+        #db = client["userdata"]
         #javascript = run_js("""(function(){
         #var loginid = localStorage.getItem('login_id');
         #console.log(loginid);
@@ -85,6 +85,10 @@ def login():
         #print(javascript)
         #run_js("console.log('HALLO')")
         #current_url = eval_js("window.location.href")
+        val = eval_js("localStorage.getItem('login_id')")
+        print(val)
+        #output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+
 
         js = run_js('''(function(){
             var loginid = localStorage.getItem('login_id');
