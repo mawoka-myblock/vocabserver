@@ -4,7 +4,6 @@ sentry_sdk.init(
     "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
     traces_sample_rate=1.0
 )
-import asyncio
 import json
 from sentry_sdk import capture_message
 from cloudant.client import CouchDB
@@ -22,6 +21,7 @@ import interface.learn
 from config import geturl, getdb
 global email, password
 from time import sleep
+from cryptography.fernet import Fernet
 
 def getuserdata(email, password):
     #register_thread()
@@ -43,7 +43,7 @@ def convert_lang(word):
         return "error"
 
 
-async def select_what_to_do():
+def select_what_to_do():
     what_to_do = input_group("Was möchtest du machen?",
                              [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"),
                               select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
@@ -81,7 +81,7 @@ def login():
         #output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
 
         #put_text(eval_js("window.location.href"))
-        put_text(val)
+        #put_text(val)
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
                                           'Content-Type': 'application/x-www-form-urlencoded'},
@@ -102,7 +102,8 @@ def login():
         login_fields = input_group("Bitte einloggen!",
                                    [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
                                     input("Dein Pasword", name="password", type="password"),
-                                    input("Deinen Klassenraum", name="classroom", validate=check_classlevel)])
+                                    input("Deinen Klassenraum", name="classroom", validate=check_classlevel),
+                                    checkbox("Eingeloggt bleiben?", ["Ja"], name="stayloggedin")])
 
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
@@ -110,7 +111,7 @@ def login():
                                  data={'grant_type': '', 'username': f'{login_fields["mail"]}',
                                        'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
                                        'client_secret': ''})
-
+    ic()
     with use_scope('First_Scope', clear=True):
         with suppress(Exception):
             if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
@@ -132,11 +133,26 @@ def login():
                 global token
                 token = json.loads(response.text)["access_token"]
                 put_success("Logged in succesfully!")
-                print(token)
-                select_what_to_do()
+                print(eval_js("localStorage.getItem('login_id')"))
+                ic()
+                if login_fields["stayloggedin"] and not eval_js("localStorage.getItem('login_id')") == "Null":
+                    key = Fernet.generate_key()
+                    run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
+                    random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+                    run_js("localStorage.setItem('login_id', id);", id=random_string)
+                    cipher_suite = Fernet(key)
+                    password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
+                    email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
+                    print(password, email)
+                    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+                    db = client["userdata"]
+                    db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
+                    client.disconnect()
+
             else:
                 put_error("Unknown error!")
                 capture_message('Something went wrong')
-
+            ic()
+            select_what_to_do()
 # start_server(login)
 # start_server([login], port=5000)

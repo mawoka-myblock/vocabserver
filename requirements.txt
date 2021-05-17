@@ -45,3 +45,5 @@ websockets==9.0.1
 wrapt==1.12.1
 cloudant==2.14.0
 sentry-sdk==1.1.0
+cryptography==3.4.7
+
