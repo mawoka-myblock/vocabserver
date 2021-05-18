@@ -14,6 +14,7 @@ from pywebio.output import *
 from pywebio.session import *
 import random
 import string
+import asyncio
 from icecream import ic
 import interface.create
 import interface.dictonary
@@ -69,7 +70,6 @@ def check_classlevel(classlevel):
     else:
         return "Please enter a classleve between 5 and 8."
 
-
 def login():
     already_logged_in = actions("Already logged in?", ["Yes", "No"])
     if already_logged_in == "Yes":
@@ -80,14 +80,12 @@ def login():
         print(val)
         #output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
 
+        password = "Password"
+        email = "EMAIL"
         #put_text(eval_js("window.location.href"))
         #put_text(val)
-        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
-                                 headers={'accept': 'application/x-www-form-urlencoded',
-                                          'Content-Type': 'application/x-www-form-urlencoded'},
-                                 data={'grant_type': '', 'username': f'{email}',
-                                       'password': f'{password}', 'scope': '', 'client_id': '',
-                                       'client_secret': ''})
+
+        ic()
     try:
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
@@ -108,9 +106,10 @@ def login():
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
                                           'Content-Type': 'application/x-www-form-urlencoded'},
-                                 data={'grant_type': '', 'username': f'{login_fields["mail"]}',
-                                       'password': f'{login_fields["password"]}', 'scope': '', 'client_id': '',
+                                 data={'grant_type': '', 'username': login_fields["mail"],
+                                       'password': login_fields["password"], 'scope': '', 'client_id': '',
                                        'client_secret': ''})
+        #print(response.text)
     ic()
     with use_scope('First_Scope', clear=True):
         with suppress(Exception):
@@ -129,30 +128,40 @@ def login():
                 capture_message('Something went wrong')
 
         with suppress(Exception):
+            ic()
             if "bearer" == json.loads(response.text)["token_type"]:
                 global token
                 token = json.loads(response.text)["access_token"]
+                ic("Hallo")
+
                 put_success("Logged in succesfully!")
-                print(eval_js("localStorage.getItem('login_id')"))
+                put_text("HALLO%")
+                current_url = eval_js("window.location.href")
+                put_text(current_url)
+                location = eval_js("window.location.href")
+                ic("Hallo2")
+
+                ic(str(location))
+                ic("Hallo3")
+            if login_fields["stayloggedin"]:
                 ic()
-                if login_fields["stayloggedin"] and not eval_js("localStorage.getItem('login_id')") == "Null":
-                    key = Fernet.generate_key()
-                    run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
-                    random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
-                    run_js("localStorage.setItem('login_id', id);", id=random_string)
-                    cipher_suite = Fernet(key)
-                    password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
-                    email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
-                    print(password, email)
-                    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-                    db = client["userdata"]
-                    db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
-                    client.disconnect()
+                key = Fernet.generate_key()
+                run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
+                random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+                run_js("localStorage.setItem('login_id', id);", id=random_string)
+                cipher_suite = Fernet(key)
+                password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
+                email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
+                print(password, email)
+                client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+                db = client["userdata"]
+                db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
+                client.disconnect()
 
             else:
                 put_error("Unknown error!")
                 capture_message('Something went wrong')
             ic()
-            select_what_to_do()
+        select_what_to_do()
 # start_server(login)
 # start_server([login], port=5000)

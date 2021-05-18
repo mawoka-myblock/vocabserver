@@ -16,6 +16,9 @@ from fastapi.responses import ORJSONResponse
 from pywebio.platform.fastapi import webio_routes
 import interface.ui as ui
 from fastapi.staticfiles import StaticFiles
+import asyncio
+import threading
+from pywebio.platform import run_event_loop
 import initialisation
 import verifymail
 
@@ -107,4 +110,5 @@ app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codem
 app.mount("/css", StaticFiles(directory="static/css"), name="css")
 app.mount("/image", StaticFiles(directory="static/image"), name="image")
 app.mount("/js", StaticFiles(directory="static/js"), name="js")
+#threading.Thread(target=run_event_loop(), daemon=True).start()
 app.mount("/", FastAPI(routes=webio_routes(ui.login, cdn=False)))
