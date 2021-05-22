@@ -1,18 +1,19 @@
 import pywebio
-
-import asyncio
-from pywebio.session import *
+from pywebio.platform.fastapi import start_server
+from pywebio.input import *
 from pywebio.output import *
-from icecream import ic
-import requests
-async def main():
-    response = requests.post(f'http://127.0.0.1:8000/api/v1/auth/jwt/login',
-                             headers={'accept': 'application/x-www-form-urlencoded',
-                                      'Content-Type': 'application/x-www-form-urlencoded'},
-                             data={'grant_type': '', 'username': f'test@test.test',
-                                   'password': f'testtest', 'scope': '', 'client_id': '',
-                                   'client_secret': ''})
-    print(response.text)
+from pywebio.session import *
 
-if __name__ == "__main__":
-    asyncio.run(main())
+
+def main():
+    already_logged_in = actions("Already logged in?", ["Yes", "No"])
+    if already_logged_in == "Yes":
+        val = eval_js("localStorage.getItem('login_id')")
+        put_text('login_id', val)
+    else:
+        print("lol")
+    hold()
+
+
+if __name__ == '__main__':
+    start_server(main, port=8000, debug=True)

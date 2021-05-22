@@ -70,31 +70,16 @@ def check_classlevel(classlevel):
     else:
         return "Please enter a classleve between 5 and 8."
 
+
 def login():
     already_logged_in = actions("Already logged in?", ["Yes", "No"])
     if already_logged_in == "Yes":
-        #client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-        #db = client["userdata"]
-
         val = eval_js("localStorage.getItem('login_id')")
-        print(val)
-        #output_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
-
-        password = "Password"
-        email = "EMAIL"
-        #put_text(eval_js("window.location.href"))
-        #put_text(val)
+        put_text('login_id', val)
 
         ic()
-    try:
-        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
-                                 headers={'accept': 'application/x-www-form-urlencoded',
-                                          'Content-Type': 'application/x-www-form-urlencoded'},
-                                 data={'grant_type': '', 'username': f'{email}',
-                                       'password': f'{password}', 'scope': '', 'client_id': '',
-                                       'client_secret': ''})
-        put_text(response.text)
-    except:
+
+    else:
         ic()
         #put_text(function_res)
         login_fields = input_group("Bitte einloggen!",
@@ -109,7 +94,7 @@ def login():
                                  data={'grant_type': '', 'username': login_fields["mail"],
                                        'password': login_fields["password"], 'scope': '', 'client_id': '',
                                        'client_secret': ''})
-        #print(response.text)
+        #print(response.text)"""
     ic()
     with use_scope('First_Scope', clear=True):
         with suppress(Exception):

@@ -21,6 +21,7 @@ import threading
 from pywebio.platform import run_event_loop
 import initialisation
 import verifymail
+import test
 
 
 
@@ -95,7 +96,7 @@ async def index(subject: str, classroom: str, id: str, file: UploadFile = File(d
 # app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))
 @app.get("/api/v1/user/verifymail/{verify_id}", tags=["users"])
 async def index(verify_id: str):
-    return verifymail.verify(verify_id)
+    verifymail.verify(verify_id)
 
 @app.get("/api/v1/user/startverify/{usermail}", tags=["users"])
 async def index(usermail: str):
@@ -111,4 +112,4 @@ app.mount("/css", StaticFiles(directory="static/css"), name="css")
 app.mount("/image", StaticFiles(directory="static/image"), name="image")
 app.mount("/js", StaticFiles(directory="static/js"), name="js")
 #threading.Thread(target=run_event_loop(), daemon=True).start()
-app.mount("/", FastAPI(routes=webio_routes(ui.login, cdn=False)))
+app.mount("/pywebio", FastAPI(routes=webio_routes(test.main, cdn=False)))

@@ -5,19 +5,23 @@ sentry_sdk.init(
     traces_sample_rate=1.0
 )
 import requests
+from icecream import ic
 from string import Template
 
 
 def verify(token):
     print("HALLO1")
     headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-    data = '{"token": "$"}'
-    r = requests.post("http://127.0.0.1:8000/api/v1/auth/verify", data={"token": token}, headers=headers)
-    return r.text
+    ic()
+    r = requests.post("http://127.0.0.1:8000/api/v1/auth/verify", data='{"token": "%s"}' % token, headers=headers)
+    print(r.text)
+    #r = requests.post("https://bin.muetsch.io/xgom6ya", data='{"token": "%s"}' % token, headers=headers)
+    #return r.text
+    #ic(r.text)
 
 def requestverify(usermail):
-    print("HALLO")
-    r = requests.post("http://localhost:8000/auth/request-verify-token", data={"email": usermail})
+    print(usermail)
+    r = requests.post("http://127.0.0.1:8000/api/v1/auth/request-verify-token", data='{"email": "%s"}' % usermail.replace("%40", "@"))
     return r.text
 
 
