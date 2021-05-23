@@ -1,8 +1,5 @@
-import sentry_sdk
-sentry_sdk.init(
-    "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
-    traces_sample_rate=1.0
-)
+from config import sentry
+sentry()
 from fastapi import FastAPI, Depends, Form, File, UploadFile
 from fastapi.responses import JSONResponse
 
@@ -12,11 +9,16 @@ import students
 from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
 from fastapi.responses import ORJSONResponse
-from pywebio.platform.fastapi import webio_routes
+from pywebio.platform.fastapi import asgi_app
 import interface.ui as ui
+import interface.register as ui_register
 from fastapi.staticfiles import StaticFiles
+import asyncio
+import threading
+from pywebio.platform import run_event_loop
 import initialisation
 import verifymail
+import test
 
 
 
@@ -26,11 +28,12 @@ app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 initialisation.init(True)
 
 jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/api/v1/auth/jwt/login")
-jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=1209600, tokenUrl="/api/v1/auth/jwt/stay-login")
+jwt_stay_auth = JWTAuthentication(secret=SECRET, lifetime_seconds=1209600, tokenUrl="/api/v1/auth/jwt/stay-login")
 
 fastapi_users = auth.FastAPIUsers(auth.user_db, [jwt_authentication], User, auth.UserCreate, auth.UserUpdate,
                                   auth.UserDB, )
 app.include_router(fastapi_users.get_auth_router(jwt_authentication), prefix="/api/v1/auth/jwt", tags=["auth"])
+app.include_router(fastapi_users.get_auth_router(jwt_stay_auth), prefix="/api/v1/auth/jwt-stay", tags=["auth"])
 app.include_router(fastapi_users.get_register_router(auth.on_after_register), prefix="/api/v1/auth", tags=["auth"])
 app.include_router(
     fastapi_users.get_reset_password_router(SECRET, after_forgot_password=auth.on_after_forgot_password),
@@ -90,15 +93,17 @@ async def index(subject: str, classroom: str, id: str, file: UploadFile = File(d
 # app.mount("/tool", FastAPI(routes=webio_routes(ui.login), cdn=False))
 @app.get("/api/v1/user/verifymail/{verify_id}", tags=["users"])
 async def index(verify_id: str):
-    return verifymail.verify(verify_id)
+    verifymail.verify(verify_id)
 
 @app.get("/api/v1/user/startverify/{usermail}", tags=["users"])
 async def index(usermail: str):
     return verifymail.requestverify(usermail)
 
+@app.post("/api/v1/auth/stay-signed-id", tags=["auth"])
+async def index(loginid: str, id: str):
+    datahandler.stayloggedin(loginid, id)
 
-app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")
-app.mount("/css", StaticFiles(directory="static/css"), name="css")
-app.mount("/image", StaticFiles(directory="static/image"), name="image")
-app.mount("/js", StaticFiles(directory="static/js"), name="js")
-app.mount("/", FastAPI(routes=webio_routes(ui.login, cdn=False)))
+app.mount("/register", asgi_app(ui_register.register, cdn=False, static_dir="/"))
+
+app.mount("/", asgi_app(ui.login, cdn=False, static_dir="/"))
+

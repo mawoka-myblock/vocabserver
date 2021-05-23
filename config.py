@@ -1,3 +1,9 @@
+import sentry_sdk
+sentry_sdk.init(environment="development")
+sentry_sdk.init(
+    "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
+    traces_sample_rate=1.0
+)
 import configparser
 import os
 config = configparser.ConfigParser()
@@ -50,3 +56,21 @@ def getdb(arg):
     else:
         print("Wrong Arg")
         exit()
+
+def get_sentry_url():
+    config.read("config.ini")
+    return config["SENTRY"]["Url"]
+def get_sentry_trs():
+    config.read("config.ini")
+    return config["SENTRY"]["traces_sample_rate"]
+def get_sentry_env():
+    config.read("config.ini")
+    return config["SENTRY"]["environment"]
+
+def sentry():
+    config.read("config.ini")
+    import sentry_sdk
+    sentry_sdk.init(
+        config["SENTRY"]["Url"],
+        traces_sample_rate=float(config["SENTRY"]["traces_sample_rate"]), environment=config["SENTRY"]["environment"]
+    )

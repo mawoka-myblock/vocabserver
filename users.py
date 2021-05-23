@@ -1,3 +1,5 @@
+from config import sentry
+sentry()
 from fastapi import FastAPI, Request
 from fastapi_users import FastAPIUsers, models
 from fastapi_users.authentication import JWTAuthentication

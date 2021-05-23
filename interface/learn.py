@@ -1,3 +1,5 @@
+from config import sentry
+sentry()
 from pywebio.input import *
 from pywebio.output import *
 import requests
@@ -83,12 +85,22 @@ def inputgroup(subject):
             put_text(response.text)
 
 
-
 def index(subject, classroom):
     response = requests.get(f'{geturl()}/api/v1/vocab/list-list/{subject}/{classroom}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
+    def validate_lektion(user_input):
+        for i in json.loads(response.text):
+            ic()
+            if i == user_input:
+                print(user_input, i)
+                done = True
+                pass
+        if not done:
+            return "No entry from list"
+        #print(ui.token, "Hallo")
+
 
     with use_scope('First_Scope', clear=True):
-        what_to_do = input("Bitte wähle das Kapitel aus!", datalist=json.loads(response.text))
+        what_to_do = input("Bitte wähle das Kapitel aus!", datalist=json.loads(response.text), validate=validate_lektion)
         getvocab(classroom, subject, what_to_do)
         inputgroup(subject)

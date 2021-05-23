@@ -1,9 +1,6 @@
 import os
-import sentry_sdk
-sentry_sdk.init(
-    "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
-    traces_sample_rate=1.0
-)
+from config import sentry
+sentry()
 import smtplib
 
 import databases
@@ -61,8 +58,9 @@ user_db = OrmarUserDatabase(UserDB, UserModel)
 
 
 def verification(uid, token):
+    print("HALLO")
     user = UserDB
-
+    verifymail.sendmail(user.email, token)
 
 def after_verification_request(user: UserDB, token: str, request: Request):
     print(f"Verification requested for user {user.id}. Verification token: {token}")
@@ -72,7 +70,7 @@ def after_verification_request(user: UserDB, token: str, request: Request):
 
 
 def on_after_register(user: UserDB, request: Request):
-    os.mkdir(f'{getdatadir()}/userdata/{user.id}')
+    #os.mkdir(f'{getdatadir()}/userdata/{user.id}')
     print(f"User {user.id} has registered.")
 
 

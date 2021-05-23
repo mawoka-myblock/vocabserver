@@ -1,5 +1,4 @@
 # Vocab-server
-
-[![Build Status](https://ci.mawoka.eu.org/api/badges/Mawoka/vocab-server/status.svg)](https://ci.mawoka.eu.org/Mawoka/vocab-server)
-
-Yes.
+### Admin-Note
+The database `sli` `(means stay logged in)` will grow and grow, so recreating it will shrink the database-size.
+**Note:** If you do so, everyone will be logged out.

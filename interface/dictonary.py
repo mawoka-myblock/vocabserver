@@ -1,3 +1,5 @@
+from config import sentry
+sentry()
 from pywebio.input import *
 from pywebio.output import *
 from pywebio.platform import *

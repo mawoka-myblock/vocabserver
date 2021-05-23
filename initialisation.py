@@ -1,3 +1,5 @@
+from config import sentry
+sentry()
 from config import getdatadir, getdb
 from contextlib import suppress
 from cloudant import CouchDB
@@ -14,6 +16,8 @@ def init(no_log):
         client.create_database("vocab", partitioned=True)
     with suppress(Exception):
         client.create_database("_users", partitioned=True)
+    with suppress(Exception):
+        client.create_database("sli", partitioned=True) # sli = stay_logged_in
 
     with suppress(Exception):
         for i in years:
