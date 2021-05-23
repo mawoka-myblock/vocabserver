@@ -17,7 +17,7 @@ import interface.learn
 from config import geturl, getdb
 global email, password
 from cryptography.fernet import Fernet
-
+from datetime import date
 
 token = None
 
@@ -83,7 +83,7 @@ def login():
                     email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
                     print(password, email)
                     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-                    db = client["userdata"]
+                    db = client["sli"]
                     db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
                     client.disconnect()
 
@@ -155,10 +155,6 @@ def getuserdata(email, password):
     ic(email, password)
 
 
-
-
-
-
 def convert_lang(word):
     if word == "Französisch":
         return "french"
@@ -174,7 +170,26 @@ def convert_lang(word):
 def select_what_to_do():
     what_to_do = input_group("Was möchtest du machen?",
                              [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"),
-                              select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
+                              select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language"),
+                              checkbox("Ausloggen?", ["Ja"], name="logout")])
+    if what_to_do["logout"]:
+        ic()
+        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+        login_id = eval_js("localStorage.getItem('login_id')")
+        db = client["sli"]
+        doc = db[f"logged_in:{login_id}"]
+        doc.delete()
+        doc.save()
+        ic()
+        client.disconnect()
+        ic()
+        run_js('localStorage.removeItem("login_id")')
+        run_js('localStorage.removeItem("encryption_key")')
+        run_js('localStorage.removeItem("classlevel")')
+        run_js("location.reload()")
+
+
+
     if what_to_do["action"] == "Lernen":
         interface.learn.index(convert_lang(what_to_do["language"]), classroom)
     elif what_to_do["action"] == "Erstellen":
