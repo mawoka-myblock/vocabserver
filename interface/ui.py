@@ -26,9 +26,9 @@ def login():
     login_id = eval_js("localStorage.getItem('login_id')")
     if login_id is None:
         login_fields = input_group("Bitte einloggen!",
-                                   [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
-                                    input("Dein Pasword", name="password", type="password"),
-                                    input("Deinen Klassenraum", name="classroom", validate=check_classlevel),
+                                   [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com", required=True),
+                                    input("Dein Paswort", name="password", type="password", required=True),
+                                    input("Deinen Klassenraum", name="classroom", validate=check_classlevel, required=True),
                                     checkbox("Eingeloggt bleiben?", ["Ja"], name="stayloggedin")])
 
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',

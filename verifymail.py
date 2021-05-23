@@ -35,7 +35,7 @@ def sendmail(email, token):
     From: {sender}
 
     Please open this link: http://localhost:8000/api/v1/user/verifymail/{token}"""
-    with smtplib.SMTP("smtp.ethereal.email", 587)as server:
+    with smtplib.SMTP("smtp.ethereal.email", 587) as server:
         server.starttls()
         server.login("vida.jerde89@ethereal.email", "kZEpbJ3YWxgWyPd9Zk")
         server.sendmail(sender, receiver, message)

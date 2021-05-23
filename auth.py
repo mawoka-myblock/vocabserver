@@ -58,8 +58,9 @@ user_db = OrmarUserDatabase(UserDB, UserModel)
 
 
 def verification(uid, token):
+    print("HALLO")
     user = UserDB
-
+    verifymail.sendmail(user.email, token)
 
 def after_verification_request(user: UserDB, token: str, request: Request):
     print(f"Verification requested for user {user.id}. Verification token: {token}")
@@ -69,7 +70,7 @@ def after_verification_request(user: UserDB, token: str, request: Request):
 
 
 def on_after_register(user: UserDB, request: Request):
-    os.mkdir(f'{getdatadir()}/userdata/{user.id}')
+    #os.mkdir(f'{getdatadir()}/userdata/{user.id}')
     print(f"User {user.id} has registered.")
 
 
