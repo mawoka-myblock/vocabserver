@@ -97,7 +97,7 @@ def login():
         global classroom
         classroom = eval_js("localStorage.getItem('classlevel')")
         client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-        db = client["userdata"]
+        db = client["sli"]
         doc = db[":".join(("logged_in", login_id))]
         del doc["_id"]
         del doc["_rev"]
