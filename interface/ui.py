@@ -1,9 +1,7 @@
-import sentry_sdk
-sentry_sdk.init(environment="development")
-sentry_sdk.init(
-    "https://f09f3900a5304b768554e3e5cab68bcd@o661934.ingest.sentry.io/5764925",
-    traces_sample_rate=1.0
-)
+from config import sentry
+sentry()
+from config import sentry
+sentry()
 import json
 from sentry_sdk import capture_message
 from cloudant.client import CouchDB
@@ -14,18 +12,15 @@ from pywebio.output import *
 from pywebio.session import *
 import random
 import string
-import asyncio
 from icecream import ic
 import interface.create
 import interface.dictonary
 import interface.learn
 from config import geturl, getdb
 global email, password
-from time import sleep
 from cryptography.fernet import Fernet
 
 def getuserdata(email, password):
-    #register_thread()
     email = email
     password = password
     ic(email, password)

@@ -56,3 +56,21 @@ def getdb(arg):
     else:
         print("Wrong Arg")
         exit()
+
+def get_sentry_url():
+    config.read("config.ini")
+    return config["SENTRY"]["Url"]
+def get_sentry_trs():
+    config.read("config.ini")
+    return config["SENTRY"]["traces_sample_rate"]
+def get_sentry_env():
+    config.read("config.ini")
+    return config["SENTRY"]["environment"]
+
+def sentry():
+    config.read("config.ini")
+    import sentry_sdk
+    sentry_sdk.init(
+        config["SENTRY"]["Url"],
+        traces_sample_rate=float(config["SENTRY"]["traces_sample_rate"]), environment=config["SENTRY"]["environment"]
+    )
