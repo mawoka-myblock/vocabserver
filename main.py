@@ -108,4 +108,4 @@ async def index(loginid: str, id: str):
 
 
 
-app.mount("/pywebio", asgi_app(test.main, cdn=False))
+app.mount("/", asgi_app(ui.login, cdn=False))

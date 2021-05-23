@@ -72,16 +72,8 @@ def check_classlevel(classlevel):
 
 
 def login():
-    already_logged_in = actions("Already logged in?", ["Yes", "No"])
-    if already_logged_in == "Yes":
-        val = eval_js("localStorage.getItem('login_id')")
-        put_text('login_id', val)
-
-        ic()
-
-    else:
-        ic()
-        #put_text(function_res)
+    login_id = eval_js("localStorage.getItem('login_id')")
+    if login_id is None:
         login_fields = input_group("Bitte einloggen!",
                                    [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com"),
                                     input("Dein Pasword", name="password", type="password"),
@@ -94,59 +86,96 @@ def login():
                                  data={'grant_type': '', 'username': login_fields["mail"],
                                        'password': login_fields["password"], 'scope': '', 'client_id': '',
                                        'client_secret': ''})
-        #print(response.text)"""
-    ic()
-    with use_scope('First_Scope', clear=True):
-        with suppress(Exception):
-            if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
-                put_error("Falsche Anmeldedaten!")
-                login()
-            else:
-                put_error("Unknown error!")
-                capture_message('Something went wrong')
 
-        with suppress(Exception):
-            if "Unauthorized" == json.loads(response.text)["detail"]:
-                put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
-            else:
-                put_error("Unknown error!")
-                capture_message('Something went wrong')
+        with use_scope('First_Scope', clear=True):
+            with suppress(Exception):
+                if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
+                    put_error("Falsche Anmeldedaten!")
+                    login()
+                else:
+                    put_error("Unknown error!")
+                    capture_message('Something went wrong')
 
-        with suppress(Exception):
-            ic()
-            if "bearer" == json.loads(response.text)["token_type"]:
-                global token
-                token = json.loads(response.text)["access_token"]
-                ic("Hallo")
+            with suppress(Exception):
+                if "Unauthorized" == json.loads(response.text)["detail"]:
+                    put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
+                else:
+                    put_error("Unknown error!")
+                    capture_message('Something went wrong')
 
-                put_success("Logged in succesfully!")
-                put_text("HALLO%")
-                current_url = eval_js("window.location.href")
-                put_text(current_url)
-                location = eval_js("window.location.href")
-                ic("Hallo2")
-
-                ic(str(location))
-                ic("Hallo3")
-            if login_fields["stayloggedin"]:
+            with suppress(Exception):
                 ic()
-                key = Fernet.generate_key()
-                run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
-                random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
-                run_js("localStorage.setItem('login_id', id);", id=random_string)
-                cipher_suite = Fernet(key)
-                password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
-                email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
-                print(password, email)
-                client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-                db = client["userdata"]
-                db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
-                client.disconnect()
+                if "bearer" == json.loads(response.text)["token_type"]:
+                    global token
+                    token = json.loads(response.text)["access_token"]
+                    ic("Hallo")
 
-            else:
-                put_error("Unknown error!")
-                capture_message('Something went wrong')
+                    put_success("Logged in succesfully!")
+                if login_fields["stayloggedin"]:
+                    ic()
+                    key = Fernet.generate_key()
+                    print(key)
+                    run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
+                    random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+                    run_js("localStorage.setItem('login_id', id);", id=random_string)
+                    cipher_suite = Fernet(key)
+                    password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
+                    email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
+                    print(password, email)
+                    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+                    db = client["userdata"]
+                    db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
+                    client.disconnect()
+
+                else:
+                    put_error("Unknown error!")
+                    capture_message('Something went wrong')
             ic()
         select_what_to_do()
-# start_server(login)
-# start_server([login], port=5000)
+    else:
+        encryption_key = eval_js("localStorage.getItem('encryption_key')")
+        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+        db = client["userdata"]
+        doc = db[":".join(("logged_in", login_id))]
+        del doc["_id"]
+        del doc["_rev"]
+        print(login_id)
+        key = encryption_key.encode("ascii")
+        print(key)
+        cipher_suite = Fernet(key)
+        password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
+        email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
+        print(email, password)
+        client.disconnect()
+        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                 headers={'accept': 'application/x-www-form-urlencoded',
+                                          'Content-Type': 'application/x-www-form-urlencoded'},
+                                 data={'grant_type': '', 'username': email,
+                                       'password': password, 'scope': '', 'client_id': '',
+                                       'client_secret': ''})
+
+        with use_scope('First_Scope', clear=True):
+            with suppress(Exception):
+                if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
+                    put_error("Falsche Anmeldedaten!")
+                    login()
+                else:
+                    put_error("Unknown error!")
+                    capture_message('Something went wrong')
+
+            with suppress(Exception):
+                if "Unauthorized" == json.loads(response.text)["detail"]:
+                    put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
+                else:
+                    put_error("Unknown error!")
+                    capture_message('Something went wrong')
+
+            with suppress(Exception):
+                ic()
+                if "bearer" == json.loads(response.text)["token_type"]:
+                    token = json.loads(response.text)["access_token"]
+                    ic()
+
+                    put_success("Logged in succesfully!")
+        select_what_to_do()
+
