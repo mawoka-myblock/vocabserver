@@ -11,6 +11,15 @@ import requests
 lang1List = []
 lang2List = []
 
+
+def check_german(word):
+    from enchant.checker import SpellChecker
+    checker = SpellChecker("de_DE")
+    checker.set_text(word)
+    if not "_" in word:
+        for err in checker:
+            return f'"{err.word}" is wrong, or no "_" in word '
+
 def index(language, token, classroom):
     clear("First_Scope")
     with use_scope("First_Scope"):
@@ -34,11 +43,11 @@ def index(language, token, classroom):
 def vocabhandler(language, token, classroom):
 
     with use_scope('First_Scope', clear=True):
-        Words = input_group("Bitte ausfüllen", [input("Please Enter The German Word：", name="Lang1", required=True),
+        Words = input_group("Bitte ausfüllen", [input("Please Enter The German Word：", name="Lang1", required=True, validate=check_german),
                                           input("Please Enter The Translation：", name="Lang2", required=True),
                                           checkbox(name="done", options=["Done!"])])  # TODO: is a huge problem!
 
-        lang1List.insert(len(lang1List), Words["Lang1"])
+        lang1List.insert(len(lang1List), Words["Lang1"].replace("_", ""))
         lang2List.insert(len(lang2List), Words["Lang2"])
 
 
