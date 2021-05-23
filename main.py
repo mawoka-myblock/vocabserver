@@ -13,7 +13,7 @@ import students
 from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
 from fastapi.responses import ORJSONResponse
-from pywebio.platform.fastapi import webio_routes
+from pywebio.platform.fastapi import asgi_app
 import interface.ui as ui
 from fastapi.staticfiles import StaticFiles
 import asyncio
@@ -107,9 +107,5 @@ async def index(loginid: str, id: str):
     datahandler.stayloggedin(loginid, id)
 
 
-app.mount("/codemirror", StaticFiles(directory="static/codemirror"), name="codemirror")
-app.mount("/css", StaticFiles(directory="static/css"), name="css")
-app.mount("/image", StaticFiles(directory="static/image"), name="image")
-app.mount("/js", StaticFiles(directory="static/js"), name="js")
-#threading.Thread(target=run_event_loop(), daemon=True).start()
-app.mount("/pywebio", FastAPI(routes=webio_routes(test.main, cdn=False)))
+
+app.mount("/pywebio", asgi_app(test.main, cdn=False))
