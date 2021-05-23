@@ -18,55 +18,11 @@ from config import geturl, getdb
 global email, password
 from cryptography.fernet import Fernet
 
-def getuserdata(email, password):
-    email = email
-    password = password
-    ic(email, password)
 
-
-global token
-
-
-def convert_lang(word):
-    if word == "Französisch":
-        return "french"
-    elif word == "Latein":
-        return "latin"
-    elif word == "Englisch":
-        return "english"
-    else:
-        print("Unexpected error in interface.ui.convert_lang")
-        return "error"
-
-
-def select_what_to_do():
-    what_to_do = input_group("Was möchtest du machen?",
-                             [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"),
-                              select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
-    if what_to_do["action"] == "Lernen":
-        interface.learn.index(convert_lang(what_to_do["language"]), classroom)
-    elif what_to_do["action"] == "Erstellen":
-        interface.create.index(convert_lang(what_to_do["language"]), token,
-                               classroom)  # convert_lang(what_to_do["language"])
-    elif what_to_do["action"] == "Wörterbuch":
-        interface.dictonary.index(convert_lang(what_to_do["language"]))
-
-
-def check_classlevel(classlevel):
-    global classroom
-    if classlevel == "5":
-        classroom = "five"
-    elif classlevel == "6":
-        classroom = "six"
-    elif classlevel == "7":
-        classroom = "seven"
-    elif classlevel == "8":
-        classroom = "eight"
-    else:
-        return "Please enter a classleve between 5 and 8."
-
+token = None
 
 def login():
+    global token
     login_id = eval_js("localStorage.getItem('login_id')")
     if login_id is None:
         login_fields = input_group("Bitte einloggen!",
@@ -101,7 +57,6 @@ def login():
             with suppress(Exception):
                 ic()
                 if "bearer" == json.loads(response.text)["token_type"]:
-                    global token
                     token = json.loads(response.text)["access_token"]
                     ic("Hallo")
 
@@ -111,7 +66,16 @@ def login():
                     key = Fernet.generate_key()
                     print(key)
                     run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
-                    run_js("localStorage.setItem('classlevel', level)", level=login_fields["classroom"])
+                    classlevel = login_fields["classroom"]
+                    if classlevel == "5":
+                        cl = "five"
+                    elif classlevel == "6":
+                        cl = "six"
+                    elif classlevel == "7":
+                        cl = "seven"
+                    elif classlevel == "8":
+                        cl = "eight"
+                    run_js("localStorage.setItem('classlevel', level)", level=cl)
                     random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
                     run_js("localStorage.setItem('login_id', id);", id=random_string)
                     cipher_suite = Fernet(key)
@@ -171,9 +135,67 @@ def login():
             with suppress(Exception):
                 if "bearer" == json.loads(response.text)["token_type"]:
                     print(token)
+
                     token = json.loads(response.text)["access_token"]
                     print(token)
 
                     put_success("Logged in succesfully!")
         select_what_to_do()
+
+
+
+
+
+
+
+
+def getuserdata(email, password):
+    email = email
+    password = password
+    ic(email, password)
+
+
+
+
+
+
+def convert_lang(word):
+    if word == "Französisch":
+        return "french"
+    elif word == "Latein":
+        return "latin"
+    elif word == "Englisch":
+        return "english"
+    else:
+        print("Unexpected error in interface.ui.convert_lang")
+        return "error"
+
+
+def select_what_to_do():
+    what_to_do = input_group("Was möchtest du machen?",
+                             [select('Was möchtest Du machen?', ['Lernen', "Erstellen", "Wörterbuch"], name="action"),
+                              select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language")])
+    if what_to_do["action"] == "Lernen":
+        interface.learn.index(convert_lang(what_to_do["language"]), classroom)
+    elif what_to_do["action"] == "Erstellen":
+        interface.create.index(convert_lang(what_to_do["language"]), token,
+                               classroom)  # convert_lang(what_to_do["language"])
+    elif what_to_do["action"] == "Wörterbuch":
+        interface.dictonary.index(convert_lang(what_to_do["language"]))
+
+
+def check_classlevel(classlevel):
+    global classroom
+    if classlevel == "5":
+        classroom = "five"
+    elif classlevel == "6":
+        classroom = "six"
+    elif classlevel == "7":
+        classroom = "seven"
+    elif classlevel == "8":
+        classroom = "eight"
+    else:
+        return "Please enter a classleve between 5 and 8."
+
+
 
