@@ -18,10 +18,29 @@ def check_german(word):
     checker.set_text(word)
     if not "_" in word:
         for err in checker:
-            return f'"{err.word}" is wrong, or no "_" in word '
+            suggestion = ""
+            for i in err.suggest():
+                suggestion += f"{i}, "
+            return f'"{err.word}" is wrong, or no "_" in word. Did you mean {suggestion[:len(suggestion)-2]}?'
+
+def check_other_word(word):
+    from enchant.checker import SpellChecker
+    checker = SpellChecker(dict_lang)
+    checker.set_text(word)
+    if not "_" in word:
+        for err in checker:
+            suggestion = ""
+            for i in err.suggest():
+                suggestion += f"{i}, "
+            return f'"{err.word}" is wrong, or no "_" in word. Did you mean {suggestion[:len(suggestion)-2]}?'
 
 def index(language, token, classroom):
     clear("First_Scope")
+    global dict_lang
+    if language == "english":
+        dict_lang = "en_GB"
+    elif language == "french":
+        dict_lang = "fr_FR"
     with use_scope("First_Scope"):
         global id
         startgroup = input_group("Please enter the Unit-ID", [input("Bitte hier die ID eingeben", name="id", required=True), file_upload(accept=".json", max_size="2M", placeholder="Here you can upload a file instead of typing it in manually!", name="file")])
@@ -44,7 +63,7 @@ def vocabhandler(language, token, classroom):
 
     with use_scope('First_Scope', clear=True):
         Words = input_group("Bitte ausfüllen", [input("Please Enter The German Word：", name="Lang1", required=True, validate=check_german),
-                                          input("Please Enter The Translation：", name="Lang2", required=True),
+                                          input("Please Enter The Translation：", name="Lang2", required=True, validate=check_other_word),
                                           checkbox(name="done", options=["Done!"])])  # TODO: is a huge problem!
 
         lang1List.insert(len(lang1List), Words["Lang1"].replace("_", ""))
