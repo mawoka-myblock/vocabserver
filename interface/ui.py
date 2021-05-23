@@ -1,7 +1,5 @@
 from config import sentry
 sentry()
-from config import sentry
-sentry()
 import json
 from sentry_sdk import capture_message
 from cloudant.client import CouchDB
@@ -25,6 +23,8 @@ def getuserdata(email, password):
     password = password
     ic(email, password)
 
+
+global token
 
 
 def convert_lang(word):
@@ -111,6 +111,7 @@ def login():
                     key = Fernet.generate_key()
                     print(key)
                     run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
+                    run_js("localStorage.setItem('classlevel', level)", level=login_fields["classroom"])
                     random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
                     run_js("localStorage.setItem('login_id', id);", id=random_string)
                     cipher_suite = Fernet(key)
@@ -129,6 +130,8 @@ def login():
         select_what_to_do()
     else:
         encryption_key = eval_js("localStorage.getItem('encryption_key')")
+        global classroom
+        classroom = eval_js("localStorage.getItem('classlevel')")
         client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
         db = client["userdata"]
         doc = db[":".join(("logged_in", login_id))]
@@ -148,7 +151,7 @@ def login():
                                  data={'grant_type': '', 'username': email,
                                        'password': password, 'scope': '', 'client_id': '',
                                        'client_secret': ''})
-
+        print(response.text)
         with use_scope('First_Scope', clear=True):
             with suppress(Exception):
                 if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
@@ -166,10 +169,10 @@ def login():
                     capture_message('Something went wrong')
 
             with suppress(Exception):
-                ic()
                 if "bearer" == json.loads(response.text)["token_type"]:
+                    print(token)
                     token = json.loads(response.text)["access_token"]
-                    ic()
+                    print(token)
 
                     put_success("Logged in succesfully!")
         select_what_to_do()
