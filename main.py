@@ -8,7 +8,6 @@ import datahandler
 import students
 from auth import User, SECRET, JWTAuthentication
 from docs import tags_metadata
-from fastapi.responses import ORJSONResponse
 from pywebio.platform.fastapi import asgi_app
 import interface.ui as ui
 from fastapi.staticfiles import StaticFiles

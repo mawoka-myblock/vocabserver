@@ -2,3 +2,4 @@ __pycache__
 data/userdata/*
 data/vocab/*
 data/*.db
+venv/

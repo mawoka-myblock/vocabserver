@@ -1,6 +1,5 @@
 from config import sentry
 sentry()
-import json
 import os
 
 global data

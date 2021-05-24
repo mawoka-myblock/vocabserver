@@ -1,8 +1,8 @@
-import pywebio
 from pywebio.platform.fastapi import start_server
-from pywebio.input import *
 from pywebio.output import *
+from pywebio.platform.fastapi import start_server
 from pywebio.session import *
+
 
 def check_classlevel(classlevel):
     global classroom

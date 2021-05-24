@@ -2,20 +2,12 @@ from config import sentry
 sentry()
 #from cryptography.fernet import Fernet
 
-import os
-from contextlib import suppress
-import re
 global response
 from config import getdatadir, getdb
-import json
 import codecs
 from icecream import ic
 from cloudant.client import CouchDB
-import interface.ui as ui
 import os
-from auth import SECRET
-
-
 
 
 def save(subject, classlevel, id, l1, l2):
@@ -37,6 +29,7 @@ def save(subject, classlevel, id, l1, l2):
     client.disconnect()
 
 
+# noinspection PyUnreachableCode
 def read(subject, classlevel, id):
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client[classlevel]

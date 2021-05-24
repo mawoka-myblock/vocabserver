@@ -2,7 +2,6 @@ from config import sentry
 sentry()
 from pywebio.input import *
 from pywebio.output import *
-from pywebio.platform import *
 from config import geturl
 import requests
 
@@ -47,7 +46,9 @@ def index(language, token, classroom):
         #ic(startgroup["file"]["filename"])
         #ic(startgroup["file"]["content"])
         try:
-            r = requests.post(f"{geturl()}/api/v1/vocab/upload/{language}/{classroom}/{id}", headers={'accept': 'application/json', 'Authorization': f'Bearer {token}', 'Content-Type': 'multipart/form-data'}, data=startgroup["file"]["content"])
+            requests.post(f"{geturl()}/api/v1/vocab/upload/{language}/{classroom}/{id}",
+                          headers={'accept': 'application/json', 'Authorization': f'Bearer {token}',
+                                   'Content-Type': 'multipart/form-data'}, data=startgroup["file"]["content"])
         except Exception:
             vocabhandler(language, token, classroom)
             with use_scope("First_Scope"):

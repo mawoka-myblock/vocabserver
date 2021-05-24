@@ -1,11 +1,9 @@
 from config import sentry, geturl, mail
 sentry()
 import requests
-from string import Template
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from jinja2 import Environment, FileSystemLoader
-import os
 
 
 def verify(token):

@@ -1,6 +1,6 @@
 from config import sentry
 sentry()
-from config import getdatadir, getdb
+from config import getdb
 from contextlib import suppress
 from cloudant import CouchDB
 years = ["five", "six", "seven", "eight"]

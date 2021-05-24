@@ -16,7 +16,6 @@ import interface.learn
 from config import geturl, getdb
 global email, password
 from cryptography.fernet import Fernet
-from datetime import date
 
 token = None
 

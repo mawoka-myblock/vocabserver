@@ -23,7 +23,7 @@ def getport():
 
 def debug():
     config.read('config.ini')
-    if config["SERVER"]['Debug'] == True:
+    if config["SERVER"]['Debug']:
         return "True"
     else:
         return False

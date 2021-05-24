@@ -86,6 +86,7 @@ def index(subject, classroom):
     response = requests.get(f'{geturl()}/api/v1/vocab/list-list/{subject}/{classroom}',
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     def validate_lektion(user_input):
+        global done
         for i in json.loads(response.text):
             if i == user_input:
                 done = True

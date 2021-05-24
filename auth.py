@@ -1,7 +1,6 @@
-import os
 from config import sentry
+
 sentry()
-import smtplib
 
 import databases
 import sqlalchemy
@@ -10,7 +9,6 @@ import fastapi_users
 from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
 from pydantic import validator
 from fastapi_users import models
-from fastapi_users.authentication import JWTAuthentication
 
 from config import getdatadir, getsecret, passwdlength
 import verifymail
@@ -61,15 +59,17 @@ def verification(uid, token):
     user = UserDB
     verifymail.sendmail(user.email, token)
 
+
 def after_verification_request(user: UserDB, token: str, request: Request):
-    #sender = "<vocabserver@lol.org>"
-    #receiver = f"<{user.email}>"
+    # sender = "<vocabserver@lol.org>"
+    # receiver = f"<{user.email}>"
     verifymail.sendmail(user.email, token)
 
 
 def on_after_register(user: UserDB, request: Request):
-    #os.mkdir(f'{getdatadir()}/userdata/{user.id}')
+    # os.mkdir(f'{getdatadir()}/userdata/{user.id}')
     pass
+
 
 def on_after_forgot_password(user: UserDB, token: str, request: Request):
     verifymail.passwordresetmail(user.email, token)
