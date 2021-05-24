@@ -14,6 +14,7 @@ xhr.onload = function() {
         //alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
     } else if (xhr.status == 200) { // show the result
         alert(`Mail-Adresse erfolgreich verifiziert!`); // response is the server response
+        window.localStorage.clear();
         window.location.replace("/")
     } else {
         alert("Da war ein Fehler bei der Verifizierung!");
