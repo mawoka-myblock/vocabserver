@@ -7,7 +7,6 @@ from config import geturl
 import json
 import interface.ui as ui
 import random
-from icecream import ic
 
 
 def getvocab(classroom, subject, id):
@@ -88,9 +87,7 @@ def index(subject, classroom):
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     def validate_lektion(user_input):
         for i in json.loads(response.text):
-            ic()
             if i == user_input:
-                print(user_input, i)
                 done = True
                 pass
         if not done:

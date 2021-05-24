@@ -4,8 +4,6 @@ from pywebio.input import *
 from pywebio.output import *
 from pywebio.platform import *
 from config import geturl
-from icecream import ic
-
 import requests
 
 lang1List = []
@@ -50,7 +48,6 @@ def index(language, token, classroom):
         #ic(startgroup["file"]["content"])
         try:
             r = requests.post(f"{geturl()}/api/v1/vocab/upload/{language}/{classroom}/{id}", headers={'accept': 'application/json', 'Authorization': f'Bearer {token}', 'Content-Type': 'multipart/form-data'}, data=startgroup["file"]["content"])
-            ic(r.text)
         except Exception:
             vocabhandler(language, token, classroom)
             with use_scope("First_Scope"):
@@ -85,7 +82,6 @@ def vocabhandler(language, token, classroom):
                 length = len(lang1List)
                 for i in range(0, length):
                     r = requests.post(f'{geturl()}/api/v1/vocab/add-list/{language}/{classroom}/{id}', headers={'accept': 'application/x-www-form-urlencoded', 'Authorization': f'Bearer {token}'}, data={"lone": lang1List[i], "ltwo": lang2List[i]})
-                    print(r.text)
                     put_text(r.text)
 
             else:

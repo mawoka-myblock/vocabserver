@@ -56,9 +56,7 @@ def getcontent(subject, classlevel):
     for i in db:
         liste.append(i["_id"])
     result = []
-    print(liste)
     for i in liste:
-        print(i)
         result.append(i.replace(f"{subject}:", ""))
     return result
     #return str(liste).replace(f"{subject}:", "")

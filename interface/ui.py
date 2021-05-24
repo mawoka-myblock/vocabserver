@@ -10,7 +10,6 @@ from pywebio.output import *
 from pywebio.session import *
 import random
 import string
-from icecream import ic
 import interface.create
 import interface.dictonary
 import interface.learn
@@ -57,16 +56,12 @@ def login():
                     capture_message('Something went wrong')
 
             with suppress(Exception):
-                ic()
                 if "bearer" == json.loads(response.text)["token_type"]:
                     token = json.loads(response.text)["access_token"]
-                    ic("Hallo")
 
                     put_success("Logged in succesfully!")
                 if login_fields["stayloggedin"]:
-                    ic()
                     key = Fernet.generate_key()
-                    print(key)
                     run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
                     classlevel = login_fields["classroom"]
                     if classlevel == "5":
@@ -83,7 +78,6 @@ def login():
                     cipher_suite = Fernet(key)
                     password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
                     email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
-                    print(password, email)
                     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
                     db = client["sli"]
                     db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
@@ -92,7 +86,6 @@ def login():
                 else:
                     put_error("Unknown error!")
                     capture_message('Something went wrong')
-            ic()
         select_what_to_do()
     else:
         encryption_key = eval_js("localStorage.getItem('encryption_key')")
@@ -103,13 +96,10 @@ def login():
         doc = db[":".join(("logged_in", login_id))]
         del doc["_id"]
         del doc["_rev"]
-        print(login_id)
         key = encryption_key.encode("ascii")
-        print(key)
         cipher_suite = Fernet(key)
         password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
         email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
-        print(email, password)
         client.disconnect()
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                  headers={'accept': 'application/x-www-form-urlencoded',
@@ -117,7 +107,6 @@ def login():
                                  data={'grant_type': '', 'username': email,
                                        'password': password, 'scope': '', 'client_id': '',
                                        'client_secret': ''})
-        print(response.text)
         with use_scope('First_Scope', clear=True):
             put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
             with suppress(Exception):
@@ -137,10 +126,8 @@ def login():
 
             with suppress(Exception):
                 if "bearer" == json.loads(response.text)["token_type"]:
-                    print(token)
 
                     token = json.loads(response.text)["access_token"]
-                    print(token)
 
                     put_success("Logged in succesfully!")
         select_what_to_do()
@@ -155,7 +142,6 @@ def login():
 def getuserdata(email, password):
     email = email
     password = password
-    ic(email, password)
 
 
 def convert_lang(word):
@@ -176,16 +162,13 @@ def select_what_to_do():
                               select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language"),
                               checkbox("Ausloggen?", ["Ja"], name="logout")])
     if what_to_do["logout"]:
-        ic()
         client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
         login_id = eval_js("localStorage.getItem('login_id')")
         db = client["sli"]
         doc = db[f"logged_in:{login_id}"]
         doc.delete()
         doc.save()
-        ic()
         client.disconnect()
-        ic()
         run_js('localStorage.removeItem("login_id")')
         run_js('localStorage.removeItem("encryption_key")')
         run_js('localStorage.removeItem("classlevel")')
