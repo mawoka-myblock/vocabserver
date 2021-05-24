@@ -74,3 +74,20 @@ def sentry():
         config["SENTRY"]["Url"],
         traces_sample_rate=float(config["SENTRY"]["traces_sample_rate"]), environment=config["SENTRY"]["environment"]
     )
+
+def mail(thing):
+    config.read("config.ini")
+    if thing == "adress":
+        return config["MAIL"]["Mailadress"]
+    elif thing == "password":
+        return config["MAIL"]["Password"]
+    elif thing == "username":
+        return config["MAIL"]["username"]
+    elif thing == "serveradress":
+        return config["MAIL"]["serveradress"]
+    elif thing == "port":
+        return int(config["MAIL"]["port"])
+    else:
+        print("You Idiot!")
+
+

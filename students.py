@@ -10,7 +10,6 @@ from cloudant import CouchDB
 client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
 
 def saveresult(uid, ltwo, hdiw, subject):
-    print(uid)
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     db = client["userdata"]
     if f"{uid}:{subject}" in db:

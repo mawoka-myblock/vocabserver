@@ -7,7 +7,6 @@ from config import geturl
 import json
 import interface.ui as ui
 import random
-from icecream import ic
 
 
 def getvocab(classroom, subject, id):
@@ -38,27 +37,25 @@ def getstats(subject):
 
 @use_scope("First_scope")
 def inputgroup(subject):
+    put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
     for i in range(len(german)):
-        put_text(f"{german[i]} is the same as {subject_word[i]}")
+        #put_text(f"{german[i]} is the same as {subject_word[i]}")
         words_entered = input_group(f"Please enter the {subject} word!",
-                                    [input(f"Input the {german[i]} word", name="word")])
+                                    [input(f"Input the German word for {german[i]}!", name="word")])
         stats = getstats(subject)
         try:
             if words_entered["word"] == subject_word[i]:
-                put_text("Richtig")
-                put_text(stats[subject_word[i]])
+                put_text(f"Richtig, {subject_word[i]} hat nun den Score von {stats[subject_word[i]]}.")
                 if int(stats[subject_word[i]]) > 0:
                     response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': int(stats[subject_word[i]]) - 1})
-                    put_text(response.text)
                 elif int(stats[subject_word[i]]) <= 0:
                     response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': 0})
-                    put_text(response.text)
             else:
                 put_text(
                     f"Falsch, richtig wäre {subject_word[i]} gewesen, aber du hast '{words_entered['word']}' eingegeben.")
@@ -67,22 +64,22 @@ def inputgroup(subject):
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': int(stats[subject_word[i]]) + 1})
-                    put_text(response.text)
+                    #put_text(response.text)
                 elif int(stats[subject_word[i]]) >= 3:
                     response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': 0})
-                    put_text(response.text)
+                    #put_text(response.text)
 
         except:
-            put_text(subject_word[i])
+            #put_text(subject_word[i])
             response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                      headers={'Content-Type': 'application/x-www-form-urlencoded',
                                               'Authorization': f'Bearer {ui.token}'},
                                      data={'ltwo': subject_word[i], 'hdiw': '3'})
 
-            put_text(response.text)
+            #put_text(response.text)
 
 
 def index(subject, classroom):
@@ -90,9 +87,7 @@ def index(subject, classroom):
                             headers={'accept': 'application/json', 'Authorization': f'Bearer {ui.token}'})
     def validate_lektion(user_input):
         for i in json.loads(response.text):
-            ic()
             if i == user_input:
-                print(user_input, i)
                 done = True
                 pass
         if not done:
@@ -101,6 +96,7 @@ def index(subject, classroom):
 
 
     with use_scope('First_Scope', clear=True):
+        put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
         what_to_do = input("Bitte wähle das Kapitel aus!", datalist=json.loads(response.text), validate=validate_lektion)
         getvocab(classroom, subject, what_to_do)
         inputgroup(subject)

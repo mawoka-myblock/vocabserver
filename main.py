@@ -11,14 +11,10 @@ from docs import tags_metadata
 from fastapi.responses import ORJSONResponse
 from pywebio.platform.fastapi import asgi_app
 import interface.ui as ui
-import interface.register as ui_register
 from fastapi.staticfiles import StaticFiles
-import asyncio
-import threading
-from pywebio.platform import run_event_loop
 import initialisation
 import verifymail
-import test
+
 
 
 
@@ -103,7 +99,10 @@ async def index(usermail: str):
 async def index(loginid: str, id: str):
     datahandler.stayloggedin(loginid, id)
 
-app.mount("/register", asgi_app(ui_register.register, cdn=False, static_dir="/"))
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+#app.mount("/register", asgi_app(ui_register.register, cdn=False, static_dir="/"))
 
 app.mount("/", asgi_app(ui.login, cdn=False, static_dir="/"))
 

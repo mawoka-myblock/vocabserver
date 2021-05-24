@@ -58,12 +58,10 @@ user_db = OrmarUserDatabase(UserDB, UserModel)
 
 
 def verification(uid, token):
-    print("HALLO")
     user = UserDB
     verifymail.sendmail(user.email, token)
 
 def after_verification_request(user: UserDB, token: str, request: Request):
-    print(f"Verification requested for user {user.id}. Verification token: {token}")
     #sender = "<vocabserver@lol.org>"
     #receiver = f"<{user.email}>"
     verifymail.sendmail(user.email, token)
@@ -71,11 +69,10 @@ def after_verification_request(user: UserDB, token: str, request: Request):
 
 def on_after_register(user: UserDB, request: Request):
     #os.mkdir(f'{getdatadir()}/userdata/{user.id}')
-    print(f"User {user.id} has registered.")
-
+    pass
 
 def on_after_forgot_password(user: UserDB, token: str, request: Request):
-    print(f"User {user.id} has forgot their password. Reset token: {token}")
+    verifymail.passwordresetmail(user.email, token)
 
 
 app.state.database = database
