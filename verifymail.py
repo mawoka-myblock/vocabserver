@@ -34,7 +34,7 @@ def sendmail(email, token):
     To: {receiver}
     From: {sender}
 
-    Please open this link: {geturl()}/static/verify.html/?id={token}"""
+    Please open this link to verify your mail: {geturl()}/static/verify.html/?id={token}"""
     with smtplib.SMTP("smtp.ethereal.email", 587) as server:
         server.starttls()
         server.login("vida.jerde89@ethereal.email", "kZEpbJ3YWxgWyPd9Zk")
