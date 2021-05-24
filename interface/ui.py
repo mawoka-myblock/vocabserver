@@ -22,6 +22,7 @@ from datetime import date
 token = None
 
 def login():
+    put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
     global token
     login_id = eval_js("localStorage.getItem('login_id')")
     if login_id is None:
@@ -39,6 +40,7 @@ def login():
                                        'client_secret': ''})
 
         with use_scope('First_Scope', clear=True):
+            put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
             with suppress(Exception):
                 if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
                     put_error("Falsche Anmeldedaten!")
@@ -117,6 +119,7 @@ def login():
                                        'client_secret': ''})
         print(response.text)
         with use_scope('First_Scope', clear=True):
+            put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
             with suppress(Exception):
                 if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
                     put_error("Falsche Anmeldedaten!")

@@ -46,3 +46,24 @@ def sendmail(email, token):
         server.starttls()
         server.login(mail("username"), mail("password"))
         server.sendmail(mail("adress"), email, msgbody)
+
+
+
+def passwordresetmail(email, token):
+    import smtplib
+    env = Environment(
+        loader=FileSystemLoader('templates/'))
+    template = env.get_template("passwordreset.html")
+    html = template.render({"link": f"{geturl()}/static/passwordreset.html?id={token}"})
+    message = MIMEMultipart()
+    message["Subject"] = "Verify your email"
+    message["From"] = mail("adress")
+    message["To"] = email
+    message.attach(MIMEText(html, "html"))
+    msgbody = message.as_string()
+
+    with smtplib.SMTP(mail("serveradress"), mail("port")) as server:
+        server.ehlo()
+        server.starttls()
+        server.login(mail("username"), mail("password"))
+        server.sendmail(mail("adress"), email, msgbody)

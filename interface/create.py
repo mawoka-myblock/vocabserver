@@ -36,6 +36,7 @@ def check_other_word(word):
 
 def index(language, token, classroom):
     clear("First_Scope")
+    put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
     global dict_lang
     if language == "english":
         dict_lang = "en_GB"
@@ -62,6 +63,7 @@ def index(language, token, classroom):
 def vocabhandler(language, token, classroom):
 
     with use_scope('First_Scope', clear=True):
+        put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
         Words = input_group("Bitte ausfüllen", [input("Please Enter The German Word：", name="Lang1", required=True, validate=check_german),
                                           input("Please Enter The Translation：", name="Lang2", required=True, validate=check_other_word),
                                           checkbox(name="done", options=["Done!"])])  # TODO: is a huge problem!

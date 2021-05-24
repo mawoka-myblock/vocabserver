@@ -1,4 +1,5 @@
 var captcha
+console.log("")
 function captcha_done() {
     var captcha = true;
     globalThis.captcha = true;
@@ -19,7 +20,7 @@ function submit() {
     }
 
     if (passwd2 == passwd1) {
-        if (passwd1.length > 8) {
+        if (passwd1.length >= 8) {
             passwords = true
         } else {
             passwords = false
