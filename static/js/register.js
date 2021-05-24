@@ -19,11 +19,19 @@ function submit() {
     }
 
     if (passwd2 == passwd1) {
-        passwords = true
+        if (passwd1.length > 8) {
+            passwords = true
+        } else {
+            passwords = false
+            document.getElementById("errorlabel").style.color = "red"
+            document.getElementById("errorlabel").style.visibility = "visible"
+            document.getElementById("errorlabel").innerHTML = "Password is too short. At least 8 characters"
+        }
     } else {
         document.getElementById("errorlabel").style.color = "red"
         document.getElementById("errorlabel").style.visibility = "visible"
         document.getElementById("errorlabel").innerHTML = "Passwords do NOT match"
+        passwords = false
     }
     
 
@@ -44,22 +52,31 @@ function submit() {
         xhr.send(data);
         xhr.onload = function() {
             if (xhr.status == 400) { // analyze HTTP status of the response
-                alert("Token ungültig!");
+                alert("Der User existiert Wahrschinlich schon!");
                 //alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
-            } else if (xhr.status == 200) { // show the result
-                alert(`Mail-Adresse erfolgreich verifiziert!`); // response is the server response
-                window.location.replace("/")
+            } else if (xhr.status == 201) { // show the result
+                var url = "/api/v1/auth/request-verify-token";
+                var req = new XMLHttpRequest();
+                req.open("POST", url, true);
+                var data = '{"email": "' + mail + '"}'
+                req.send(data);
+                req.onload = function() {
+                    console.log(req.status)
+                    if (req.status == 400) { // analyze HTTP status of the response
+                        alert("Es gab einen Fehler beim Senden der Mail! (400)");
+                        //alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+                    } else if (req.status == 202) { // show the result
+                        alert(`Deine Bestätigungs-Mail sollte auf dem Weg sein! Bitte gucke in dein Postfac und in den Spam-Ordner!`); // response is the server response
+                    } else {
+                        alert("Es gab einen Fehler beim Senden der Mail!");
+                    }
+                };
             } else {
-                alert("Da war ein Fehler bei der Verifizierung!");
+                alert("Fehler beim Registrieren!");
             }
-          };
+        };
     }
         
-
-
-
-   captcha  = false
-   globalThis.captcha
 }
 
 
