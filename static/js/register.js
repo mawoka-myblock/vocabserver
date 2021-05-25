@@ -85,6 +85,7 @@ function submit() {
                 };
             } else {
                 alert("Fehler beim Registrieren!");
+                document.getElementById("submit").classList.remove("is-disabled")
             }
         };
     }
