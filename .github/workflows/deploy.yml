@@ -24,8 +24,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        script: |
-          systemctl --user restart vocabserver.service
-          systemctl --user status vocabserver.service
-
-
+        script:  systemctl --user restart vocabserver.service
