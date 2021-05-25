@@ -25,7 +25,6 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd /home/${{ secrets.USERNAME }}/vocabserver
           systemctl --user restart vocabserver.service
           systemctl --user status vocabserver.service
 
