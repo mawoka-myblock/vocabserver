@@ -21,115 +21,120 @@ token = None
 
 def login():
     put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
-    global token
-    login_id = eval_js("localStorage.getItem('login_id')")
-    if login_id is None:
-        login_fields = input_group("Bitte einloggen!",
-                                   [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com", required=True),
-                                    input("Dein Paswort", name="password", type="password", required=True),
-                                    input("Deine Klassenstufe", name="classroom", validate=check_classlevel, required=True),
-                                    checkbox("Eingeloggt bleiben?", ["Ja"], name="stayloggedin")])
+    with use_scope("First_Scope"):
+        put_html(f"""<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+        <button class="button" id="submit" onclick="window.location.href = '{geturl()}/static/register.html'">Registrieren</button> <button class="button" onclick="window.location.href = '{geturl()}/static/passwordreset.html'">Passwort zurücksetzen</button>
+        """)
+        global token
+        login_id = eval_js("localStorage.getItem('login_id')")
+        if login_id is None:
+            login_fields = input_group("Bitte einloggen!",
+                                       [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com", required=True),
+                                        input("Dein Paswort", name="password", type="password", required=True),
+                                        input("Deine Klassenstufe", name="classroom", validate=check_classlevel, required=True),
+                                        checkbox("Eingeloggt bleiben?", ["Ja"], name="stayloggedin")])
 
-        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
-                                 headers={'accept': 'application/x-www-form-urlencoded',
-                                          'Content-Type': 'application/x-www-form-urlencoded'},
-                                 data={'grant_type': '', 'username': login_fields["mail"],
-                                       'password': login_fields["password"], 'scope': '', 'client_id': '',
-                                       'client_secret': ''})
+            response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                     headers={'accept': 'application/x-www-form-urlencoded',
+                                              'Content-Type': 'application/x-www-form-urlencoded'},
+                                     data={'grant_type': '', 'username': login_fields["mail"],
+                                           'password': login_fields["password"], 'scope': '', 'client_id': '',
+                                           'client_secret': ''})
 
-        with use_scope('First_Scope', clear=True):
-            put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
-            with suppress(Exception):
-                if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
-                    put_error("Falsche Anmeldedaten!")
-                    login()
-                else:
-                    put_error("Unknown error!")
-                    capture_message('Something went wrong')
+            with use_scope('First_Scope', clear=True):
+                put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
+                with suppress(Exception):
+                    if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
+                        put_error("Falsche Anmeldedaten!")
+                        login()
+                    else:
+                        put_error("Unknown error!")
+                        capture_message('Something went wrong')
 
-            with suppress(Exception):
-                if "Unauthorized" == json.loads(response.text)["detail"]:
-                    put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
-                else:
-                    put_error("Unknown error!")
-                    capture_message('Something went wrong')
+                with suppress(Exception):
+                    if "Unauthorized" == json.loads(response.text)["detail"]:
+                        put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
+                    else:
+                        put_error("Unknown error!")
+                        capture_message('Something went wrong')
 
-            with suppress(Exception):
-                if "bearer" == json.loads(response.text)["token_type"]:
-                    token = json.loads(response.text)["access_token"]
+                with suppress(Exception):
+                    if "bearer" == json.loads(response.text)["token_type"]:
+                        token = json.loads(response.text)["access_token"]
 
-                    put_success("Logged in succesfully!")
-                if login_fields["stayloggedin"]:
-                    key = Fernet.generate_key()
-                    run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
-                    classlevel = login_fields["classroom"]
-                    if classlevel == "5":
-                        cl = "five"
-                    elif classlevel == "6":
-                        cl = "six"
-                    elif classlevel == "7":
-                        cl = "seven"
-                    elif classlevel == "8":
-                        cl = "eight"
-                    run_js("localStorage.setItem('classlevel', level)", level=cl)
-                    random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
-                    run_js("localStorage.setItem('login_id', id);", id=random_string)
-                    cipher_suite = Fernet(key)
-                    password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
-                    email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
-                    client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-                    db = client["sli"]
-                    db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
-                    client.disconnect()
+                        put_success("Logged in succesfully!")
+                    if login_fields["stayloggedin"]:
+                        key = Fernet.generate_key()
+                        run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
+                        classlevel = login_fields["classroom"]
+                        if classlevel == "5":
+                            cl = "five"
+                        elif classlevel == "6":
+                            cl = "six"
+                        elif classlevel == "7":
+                            cl = "seven"
+                        elif classlevel == "8":
+                            cl = "eight"
+                        run_js("localStorage.setItem('classlevel', level)", level=cl)
+                        random_string = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+                        run_js("localStorage.setItem('login_id', id);", id=random_string)
+                        cipher_suite = Fernet(key)
+                        password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
+                        email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
+                        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+                        db = client["sli"]
+                        db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
+                        client.disconnect()
 
-                else:
-                    put_error("Unknown error!")
-                    capture_message('Something went wrong')
-        select_what_to_do()
-    else:
-        encryption_key = eval_js("localStorage.getItem('encryption_key')")
-        global classroom
-        classroom = eval_js("localStorage.getItem('classlevel')")
-        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-        db = client["sli"]
-        doc = db[":".join(("logged_in", login_id))]
-        del doc["_id"]
-        del doc["_rev"]
-        key = encryption_key.encode("ascii")
-        cipher_suite = Fernet(key)
-        password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
-        email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
-        client.disconnect()
-        response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
-                                 headers={'accept': 'application/x-www-form-urlencoded',
-                                          'Content-Type': 'application/x-www-form-urlencoded'},
-                                 data={'grant_type': '', 'username': email,
-                                       'password': password, 'scope': '', 'client_id': '',
-                                       'client_secret': ''})
-        with use_scope('First_Scope', clear=True):
-            put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
-            with suppress(Exception):
-                if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
-                    put_error("Falsche Anmeldedaten!")
-                    login()
-                else:
-                    put_error("Unknown error!")
-                    capture_message('Something went wrong')
+                    else:
+                        put_error("Unknown error!")
+                        capture_message('Something went wrong')
+            select_what_to_do()
+        else:
+            encryption_key = eval_js("localStorage.getItem('encryption_key')")
+            global classroom
+            classroom = eval_js("localStorage.getItem('classlevel')")
+            client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+            db = client["sli"]
+            doc = db[":".join(("logged_in", login_id))]
+            del doc["_id"]
+            del doc["_rev"]
+            key = encryption_key.encode("ascii")
+            cipher_suite = Fernet(key)
+            password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
+            email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
+            client.disconnect()
+            response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                     headers={'accept': 'application/x-www-form-urlencoded',
+                                              'Content-Type': 'application/x-www-form-urlencoded'},
+                                     data={'grant_type': '', 'username': email,
+                                           'password': password, 'scope': '', 'client_id': '',
+                                           'client_secret': ''})
+            with use_scope('First_Scope', clear=True):
+                put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
+                with suppress(Exception):
+                    if "LOGIN_BAD_CREDENTIALS" == json.loads(response.text)["detail"]:
+                        put_error("Falsche Anmeldedaten!")
+                        login()
+                    else:
+                        put_error("Unknown error!")
+                        capture_message('Something went wrong')
 
-            with suppress(Exception):
-                if "Unauthorized" == json.loads(response.text)["detail"]:
-                    put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
-                else:
-                    put_error("Unknown error!")
-                    capture_message('Something went wrong')
+                with suppress(Exception):
+                    if "Unauthorized" == json.loads(response.text)["detail"]:
+                        put_error("Deine E-Mail-Adresse ist noch nicht Verifiziert!")
+                    else:
+                        put_error("Unknown error!")
+                        capture_message('Something went wrong')
 
-            with suppress(Exception):
-                if "bearer" == json.loads(response.text)["token_type"]:
+                with suppress(Exception):
+                    if "bearer" == json.loads(response.text)["token_type"]:
 
-                    token = json.loads(response.text)["access_token"]
+                        token = json.loads(response.text)["access_token"]
 
-                    put_success("Logged in succesfully!")
-        select_what_to_do()
+                        put_success("Logged in succesfully!")
+            select_what_to_do()
 
 
 
