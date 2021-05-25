@@ -1,4 +1,4 @@
-name: scp files
+name: Deploy
 on:
   workflow_dispatch:
 jobs:
@@ -15,7 +15,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        source: "/*.py, interface/, *.ini, static/, templates/, *.txt,"
+        source: "/*.py, interface/, static/, templates/, *.txt,"
         target: "/home/ciuser/vocabserver"
     - name: Update
       uses: appleboy/ssh-action@master
