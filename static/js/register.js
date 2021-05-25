@@ -38,7 +38,7 @@ function submit() {
         document.getElementById("passwd2").classList.add("is-danger")
         document.getElementById("errorlabel").style.color = "red"
         document.getElementById("errorlabel").style.visibility = "visible"
-        document.getElementById("errorlabel").innerHTML = "Passwörter sind nicht die gleichen"
+        document.getElementById("errorlabel").innerHTML = "Passwörter sind nicht die gleichen!"
         passwords = false
     }
     
