@@ -23,7 +23,6 @@ def login():
     put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
     with use_scope("First_Scope"):
         put_html(f"""<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
         <button class="button" id="submit" onclick="window.location.href = '{geturl()}/static/register.html'">Registrieren</button> <button class="button" onclick="window.location.href = '{geturl()}/static/passwordreset.html'">Passwort zurücksetzen</button>
         """)
         global token
