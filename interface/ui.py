@@ -27,7 +27,7 @@ def login():
         login_fields = input_group("Bitte einloggen!",
                                    [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com", required=True),
                                     input("Dein Paswort", name="password", type="password", required=True),
-                                    input("Deinen Klassenraum", name="classroom", validate=check_classlevel, required=True),
+                                    input("Deine Klassenstufe", name="classroom", validate=check_classlevel, required=True),
                                     checkbox("Eingeloggt bleiben?", ["Ja"], name="stayloggedin")])
 
         response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
