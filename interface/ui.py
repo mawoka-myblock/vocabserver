@@ -20,6 +20,7 @@ from cryptography.fernet import Fernet
 token = None
 
 def login():
+    set_env(title="VocabServer")
     put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
     with use_scope("First_Scope"):
         put_html(f"""<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>
