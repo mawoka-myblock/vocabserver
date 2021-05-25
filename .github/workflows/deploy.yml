@@ -26,6 +26,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd /home/${{ secrets.USERNAME }}/vocabserver
-          screen -X -S vocabserver quit
-          ./start.sh
+          systemctl --user restart vocabserver.service
+          systemctl --user status vocabserver.service
+
 
