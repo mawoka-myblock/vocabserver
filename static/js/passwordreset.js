@@ -9,6 +9,8 @@ function captcha_done() {
 
 
 function submit() {
+    document.getElementById("passwd").classList.remove("is-danger")
+    document.getElementById("passwd2").classList.remove("is-danger")
     document.getElementById("errorlabel").style.visibility = "hidden"
     document.getElementById("errorlabel").innerHTML = ""
     var passwd1 = document.getElementById("passwd").value
@@ -23,21 +25,27 @@ function submit() {
         if (passwd1.length >= 8) {
             passwords = true
         } else {
+            document.getElementById("passwd").classList.add("is-danger")
+            document.getElementById("passwd2").classList.add("is-danger")
             passwords = false
             document.getElementById("errorlabel").style.color = "red"
             document.getElementById("errorlabel").style.visibility = "visible"
-            document.getElementById("errorlabel").innerHTML = "Password is too short. At least 8 characters"
+            document.getElementById("errorlabel").innerHTML = "Passwort ist zu kurz. Mindestens 8 Zeichen"
         }
     } else {
+        document.getElementById("passwd").classList.add("is-danger")
+        document.getElementById("passwd2").classList.add("is-danger")
         document.getElementById("errorlabel").style.color = "red"
         document.getElementById("errorlabel").style.visibility = "visible"
-        document.getElementById("errorlabel").innerHTML = "Passwords do NOT match"
+        document.getElementById("errorlabel").innerHTML = "Passwörter sind nicht die gleichen"
         passwords = false
     }
 
 
 
     if (passwords == true && captcha == true) {
+        document.getElementById("submit").classList.add("is-loading")
+        document.getElementById("submit").classList.add("is-disabled")
         var url = "/api/v1/auth/reset-password";
         var xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
@@ -50,6 +58,7 @@ function submit() {
                 //alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
             } else if (xhr.status == 200) { // show the result
                 alert("Nun kannst du dich mit deinem neuen Passwort anmelden!")
+                document.getElementById("submit").classList.remove("is-loading")
                 localStorage.clear();
                 window.location.replace("/")
             } else {

@@ -9,6 +9,7 @@ import fastapi_users
 from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
 from pydantic import validator
 from fastapi_users import models
+from fastapi_users.authentication import JWTAuthentication
 
 from config import getdatadir, getsecret, passwdlength
 import verifymail

@@ -8,6 +8,9 @@ function captcha_done() {
 
 
 function submit() {
+    document.getElementById("passwd").classList.remove("is-danger")
+    document.getElementById("passwd2").classList.remove("is-danger")
+    document.getElementById("mail").classList.remove("is-danger")
     document.getElementById("errorlabel").style.visibility = "hidden"
     document.getElementById("errorlabel").innerHTML = ""
     var mail = document.getElementById("mail").value
@@ -23,15 +26,19 @@ function submit() {
         if (passwd1.length >= 8) {
             passwords = true
         } else {
+            document.getElementById("passwd").classList.add("is-danger")
+            document.getElementById("passwd2").classList.add("is-danger")
             passwords = false
             document.getElementById("errorlabel").style.color = "red"
             document.getElementById("errorlabel").style.visibility = "visible"
-            document.getElementById("errorlabel").innerHTML = "Password is too short. At least 8 characters"
+            document.getElementById("errorlabel").innerHTML = "Passwort ist zu kurz. Mindestens 8 Zeichen."
         }
     } else {
+        document.getElementById("passwd").classList.add("is-danger")
+        document.getElementById("passwd2").classList.add("is-danger")
         document.getElementById("errorlabel").style.color = "red"
         document.getElementById("errorlabel").style.visibility = "visible"
-        document.getElementById("errorlabel").innerHTML = "Passwords do NOT match"
+        document.getElementById("errorlabel").innerHTML = "Passwörter sind nicht die gleichen"
         passwords = false
     }
     
@@ -39,12 +46,15 @@ function submit() {
     if (/[^@]+@[^@]+\.[^@]+/.test(mail)) {
         email = true
     } else {
+        document.getElementById("mail").classList.add("is-danger")
         email = false
         document.getElementById("errorlabel").style.color = "red"
         document.getElementById("errorlabel").style.visibility = "visible"
-        document.getElementById("errorlabel").innerHTML = "Not a valid e-mail adress"
+        document.getElementById("errorlabel").innerHTML = "Keine gültige E-Mail-Adresse!"
     }
     if (email == true && passwords == true && captcha == true) {
+        document.getElementById("submit").classList.add("is-loading")
+        document.getElementById("submit").classList.add("is-disabled")
         var url = "/api/v1/auth/register";
         var xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
@@ -67,7 +77,8 @@ function submit() {
                         alert("Es gab einen Fehler beim Senden der Mail! (400)");
                         //alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
                     } else if (req.status == 202) { // show the result
-                        alert(`Deine Bestätigungs-Mail sollte auf dem Weg sein! Bitte gucke in dein Postfac und in den Spam-Ordner!`); // response is the server response
+                        alert(`Deine Bestätigungs-Mail sollte auf dem Weg sein! Bitte gucke in dein Postfac und in den Spam-Ordner!`);
+                        document.getElementById("submit").classList.remove("is-loading")
                     } else {
                         alert("Es gab einen Fehler beim Senden der Mail!");
                     }
