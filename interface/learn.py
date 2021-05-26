@@ -34,13 +34,7 @@ def getstats(subject):
     else:
         return response.json()
 
-def check_score(score):
-    if score <= 0:
-        return 0
-    elif score >= 3:
-        return 3
-    else:
-        return score
+
 
 
 @use_scope("First_scope")
@@ -53,7 +47,7 @@ def inputgroup(subject):
         stats = getstats(subject)
         try:
             if words_entered["word"] == subject_word[i]:
-                put_text(f"Richtig, {subject_word[i]} hat nun den Score von {check_score(stats[subject_word[i]])}.")
+                put_text(f"Richtig, {subject_word[i]} hat nun den Score von {stats[subject_word[i]]}.")
                 if int(stats[subject_word[i]]) > 0:
                     response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
