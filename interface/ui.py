@@ -21,7 +21,11 @@ token = None
 
 def login():
     set_env(title="VocabServer")
-    put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
+    put_html("""<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>
+    <link rel="icon" type="image/png" href="/static/favicon.png">""")
+    run_js("$('head link[rel=icon]').attr('href', image_url)",
+                           image_url="/static/favicon.png")
+
     with use_scope("First_Scope"):
         put_html(f"""<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>
         <button class="btn btn-primary" id="submit" onclick="window.location.href = '{geturl()}/static/register.html'">Registrieren</button> <button class="btn btn-primary" onclick="window.location.href = '{geturl()}/static/passwordreset.html'">Passwort zurücksetzen</button> <button class="btn btn-primary" onclick="window.location.href = 'https://go.mawoka.eu.org/kjIAw'">Dokumentation</button> <button class="btn btn-primary" onclick="window.location.href = 'https://go.mawoka.eu.org/lD2YE'">News</button>
