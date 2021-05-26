@@ -24,4 +24,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        script:  systemctl --user restart vocabserver.service
+        script: |
+          [ -z "${XDG_RUNTIME_DIR}" ] && export XDG_RUNTIME_DIR=/run/user/$(id -ru)
+          systemctl --user restart vocabserver.service
