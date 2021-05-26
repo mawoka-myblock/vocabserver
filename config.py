@@ -6,6 +6,7 @@ sentry_sdk.init(
 )
 import configparser
 import os
+import sys
 config = configparser.ConfigParser()
 
 config['DIRECTORY'] = {'Data': './data'}
@@ -36,7 +37,10 @@ def passwdlength():
 
 def getsecret():
     config.read('config.ini')
-    return config["SECURITY"]["Secret"]
+    if config["SECURITY"]["Secret"] == "CHANGE ME":
+        sys.exit()
+    else:
+        return config["SECURITY"]["Secret"]
 
 
 def geturl():

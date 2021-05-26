@@ -3,3 +3,4 @@ data/userdata/*
 data/vocab/*
 data/*.db
 venv/
+config.ini
