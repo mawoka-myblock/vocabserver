@@ -4,7 +4,7 @@ FROM python:3.9.5-slim-buster
 WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN apt update
-RUN apt install hunspell hunspell-de-de hunspell-en-gb hunspell-fr -y
+RUN apt install enchant hunspell hunspell-de-de hunspell-en-gb hunspell-fr -y
 RUN pip3 install -r requirements.txt
 COPY . .
 
