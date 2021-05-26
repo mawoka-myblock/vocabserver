@@ -27,3 +27,4 @@ jobs:
         script: |
           [ -z "${XDG_RUNTIME_DIR}" ] && export XDG_RUNTIME_DIR=/run/user/$(id -ru)
           systemctl --user restart vocabserver.service
+          systemctl --user status vocabserver.service
