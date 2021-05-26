@@ -47,7 +47,7 @@ def inputgroup(subject):
         stats = getstats(subject)
         try:
             if words_entered["word"] == subject_word[i]:
-                put_text(f"Richtig, {subject_word[i]} hat nun den Score von {stats[subject_word[i]]}.")
+                put_markdown(f'<p><a style="color: green;"><strong>Richtig!</strong>&nbsp;</a><span style="text-decoration: underline;">{subject_word[i]}</span> hat nun den Score&nbsp;<strong>{int(stats[subject_word[i]])}</strong>.</p>')
                 if int(stats[subject_word[i]]) > 0:
                     response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,8 +59,7 @@ def inputgroup(subject):
                                                       'Authorization': f'Bearer {ui.token}'},
                                              data={'ltwo': subject_word[i], 'hdiw': 0})
             else:
-                put_text(
-                    f"Falsch, richtig wäre {subject_word[i]} gewesen, aber du hast '{words_entered['word']}' eingegeben.")
+                put_html(f'<p><a style="color: red;"><strong>Falsch!</strong></a> Richtig wäre <span style="text-decoration: underline;">{subject_word[i]}</span> gewesen, aber du hast <strong>{words_entered["word"]}</strong> eingegeben.</p>')
                 if int(stats[subject_word[i]]) <= 0:
                     response = requests.post(f'{geturl()}/api/v1/students/write-stats/{subject}',
                                              headers={'Content-Type': 'application/x-www-form-urlencoded',
