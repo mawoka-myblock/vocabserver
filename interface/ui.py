@@ -92,25 +92,29 @@ def login():
                         capture_message('Something went wrong')
             select_what_to_do()
         else:
-            encryption_key = eval_js("localStorage.getItem('encryption_key')")
-            global classroom
-            classroom = eval_js("localStorage.getItem('classlevel')")
-            client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-            db = client["sli"]
-            doc = db[":".join(("logged_in", login_id))]
-            del doc["_id"]
-            del doc["_rev"]
-            key = encryption_key.encode("ascii")
-            cipher_suite = Fernet(key)
-            password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
-            email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
-            client.disconnect()
-            response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
-                                     headers={'accept': 'application/x-www-form-urlencoded',
-                                              'Content-Type': 'application/x-www-form-urlencoded'},
-                                     data={'grant_type': '', 'username': email,
-                                           'password': password, 'scope': '', 'client_id': '',
-                                           'client_secret': ''})
+            try:
+                encryption_key = eval_js("localStorage.getItem('encryption_key')")
+                global classroom
+                classroom = eval_js("localStorage.getItem('classlevel')")
+                client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
+                db = client["sli"]
+                doc = db[":".join(("logged_in", login_id))]
+                del doc["_id"]
+                del doc["_rev"]
+                key = encryption_key.encode("ascii")
+                cipher_suite = Fernet(key)
+                password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
+                email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
+                client.disconnect()
+                response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
+                                         headers={'accept': 'application/x-www-form-urlencoded',
+                                                  'Content-Type': 'application/x-www-form-urlencoded'},
+                                         data={'grant_type': '', 'username': email,
+                                               'password': password, 'scope': '', 'client_id': '',
+                                               'client_secret': ''})
+            except:
+                run_js("localStorage.clear()")
+                run_js("window.location.reload()")
             with use_scope('First_Scope', clear=True):
                 put_html('<script async defer data-website-id="f2b2e6b6-d1e6-44f9-9023-8e64e264d818" src="https://analytics.mawoka.eu.org/umami.js"></script>')
                 with suppress(Exception):
