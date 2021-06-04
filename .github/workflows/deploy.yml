@@ -16,7 +16,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         source: "/*.py, interface/, static/, templates/, *.txt,"
-        target: "/home/ciuser/vocabserver"
+        target: "/home/ciuser/vs-prod"
     - name: Update
       uses: appleboy/ssh-action@master
       with:
