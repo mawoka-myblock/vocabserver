@@ -56,7 +56,7 @@ def getdb(arg):
     elif arg == "passwd":
         return os.getenv("CouchDB_PASSWORD", "password")
     elif arg == "url":
-        return os.getenv("CouchDB_URL", "http://172.24.0.2:5984")
+        return os.getenv("CouchDB_URL", "http://127.0.0.1:5984")
     else:
         print("Wrong Arg")
         exit()
