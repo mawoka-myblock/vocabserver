@@ -10,14 +10,9 @@ def init(no_log):
         print("INIT PROCESS")
     client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
     #print("Creating Database structure...")
-    with suppress(Exception):
-        client.create_database("userdata", partitioned=True)
-    with suppress(Exception):
-        client.create_database("vocab", partitioned=True)
-    with suppress(Exception):
-        client.create_database("_users", partitioned=True)
-    with suppress(Exception):
-        client.create_database("sli", partitioned=True) # sli = stay_logged_in
+    client.create_database("userdata", partitioned=True)
+    client.create_database("vocab", partitioned=True)
+    client.create_database("sli", partitioned=True) # sli = stay_logged_in
 
     with suppress(Exception):
         for i in years:

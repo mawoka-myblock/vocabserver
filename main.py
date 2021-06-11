@@ -17,10 +17,10 @@ import verifymail
 
 
 
-
+print("Hallo")
 
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
-initialisation.init(True)
+initialisation.init(False)
 
 jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/api/v1/auth/jwt/login")
 jwt_stay_auth = JWTAuthentication(secret=SECRET, lifetime_seconds=1209600, tokenUrl="/api/v1/auth/jwt/stay-login")
