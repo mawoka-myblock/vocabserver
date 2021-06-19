@@ -1,8 +1,7 @@
-from config import sentry
-sentry()
+#from config import sentry
+#sentry()
 import json
 from sentry_sdk import capture_message
-from cloudant.client import CouchDB
 from contextlib import suppress
 import requests
 from pywebio.input import *
@@ -16,6 +15,7 @@ import interface.learn
 from config import geturl, getdb
 global email, password
 from cryptography.fernet import Fernet
+from icecream import ic
 
 token = None
 
@@ -70,6 +70,7 @@ def login():
                         put_success("Logged in succesfully!")
                     if login_fields["stayloggedin"]:
                         key = Fernet.generate_key()
+                        ic()
                         run_js("localStorage.setItem('encryption_key', key);", key=key.decode("ascii"))
                         classlevel = login_fields["classroom"]
                         if classlevel == "5":
@@ -86,10 +87,7 @@ def login():
                         cipher_suite = Fernet(key)
                         password = cipher_suite.encrypt(login_fields["password"].encode("ascii"))
                         email = cipher_suite.encrypt(login_fields["mail"].encode("ascii"))
-                        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-                        db = client["sli"]
-                        db.create_document({"_id": ":".join(("logged_in", random_string)), "password": password.decode("ascii"), "email": email.decode("ascii")})
-                        client.disconnect()
+                        requests.post(f"{geturl()}/api/v1/auth/stay-signed-in", params= {"id": random_string, "password": password.decode("ascii"), "email": email.decode("ascii")})
 
                     else:
                         put_error("Unknown error!")
@@ -100,16 +98,12 @@ def login():
                 encryption_key = eval_js("localStorage.getItem('encryption_key')")
                 global classroom
                 classroom = eval_js("localStorage.getItem('classlevel')")
-                client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
-                db = client["sli"]
-                doc = db[":".join(("logged_in", login_id))]
-                del doc["_id"]
-                del doc["_rev"]
+                r = requests.get(f"{geturl()}/api/v1/get_sli_data", params={"loginid": login_id})
+                doc = r.json()
                 key = encryption_key.encode("ascii")
                 cipher_suite = Fernet(key)
                 password = cipher_suite.decrypt(doc["password"].encode("ascii")).decode()
                 email = cipher_suite.decrypt(doc["email"].encode("ascii")).decode()
-                client.disconnect()
                 response = requests.post(f'{geturl()}/api/v1/auth/jwt/login',
                                          headers={'accept': 'application/x-www-form-urlencoded',
                                                   'Content-Type': 'application/x-www-form-urlencoded'},
@@ -174,17 +168,12 @@ def select_what_to_do():
                               select("Welche Sprache?", ['Englisch', "Französisch", "Latein"], name="language"),
                               checkbox("Ausloggen?", ["Ja"], name="logout")])
     if what_to_do["logout"]:
-        client = CouchDB(getdb("uname"), getdb("passwd"), url=getdb("url"), connect=True)
         login_id = eval_js("localStorage.getItem('login_id')")
-        db = client["sli"]
-        doc = db[f"logged_in:{login_id}"]
-        doc.delete()
-        doc.save()
-        client.disconnect()
-        run_js('localStorage.removeItem("login_id")')
+        r = requests.delete(f"{geturl()}/api/v1/auth/delete_sli", params={"loginid": login_id})
+        """run_js('localStorage.removeItem("login_id")')
         run_js('localStorage.removeItem("encryption_key")')
         run_js('localStorage.removeItem("classlevel")')
-        run_js("location.reload()")
+        run_js("location.reload()")"""
 
 
 

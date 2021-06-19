@@ -6,21 +6,22 @@ import databases
 import sqlalchemy
 from fastapi import FastAPI, Request
 import fastapi_users
-from fastapi_users.db import OrmarBaseUserModel, OrmarUserDatabase
 from pydantic import validator
+
 from fastapi_users import models
+from fastapi_users.db import MongoDBUserDatabase
+import motor.motor_asyncio
 from fastapi_users.authentication import JWTAuthentication
 
-from config import getdatadir, getsecret, passwdlength
+from config import getsecret, passwdlength, get_db_connection_str, get_db_name
 import verifymail
 
 FastAPIUsers = fastapi_users.FastAPIUsers
 
 app = FastAPI()
-DATABASE_URL = f"sqlite:///{getdatadir()}/users.db"
-SECRET = getsecret()
-metadata = sqlalchemy.MetaData()
-database = databases.Database(DATABASE_URL)
+
+#SECRET = getsecret()
+SECRET = "85096eaaec2eccae28688159a87f26f490858bd7425e8b1cc40be4c2b99a9d1c8abc723640dadce389ec32ac9c2f1a74"
 
 
 class User(models.BaseUser):
@@ -43,17 +44,15 @@ class UserDB(User, models.BaseUserDB):
     pass
 
 
-class UserModel(OrmarBaseUserModel):
-    class Meta:
-        tablename = "users"
-        metadata = metadata
-        database = database
+DATABASE_URL = get_db_connection_str()
+client = motor.motor_asyncio.AsyncIOMotorClient(
+    DATABASE_URL, uuidRepresentation="standard"
+)
+db = client[get_db_name()]
+collection = db["users"]
+user_db = MongoDBUserDatabase(UserDB, collection)
 
 
-engine = sqlalchemy.create_engine(DATABASE_URL)
-metadata.create_all(engine)
-
-user_db = OrmarUserDatabase(UserDB, UserModel)
 
 
 def verification(uid, token):
@@ -62,8 +61,6 @@ def verification(uid, token):
 
 
 def after_verification_request(user: UserDB, token: str, request: Request):
-    # sender = "<vocabserver@lol.org>"
-    # receiver = f"<{user.email}>"
     verifymail.sendmail(user.email, token)
 
 
@@ -76,7 +73,7 @@ def on_after_forgot_password(user: UserDB, token: str, request: Request):
     verifymail.passwordresetmail(user.email, token)
 
 
-app.state.database = database
+
 
 
 @app.on_event("startup")

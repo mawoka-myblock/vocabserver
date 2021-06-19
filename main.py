@@ -17,18 +17,16 @@ import verifymail
 
 
 
-print("Hallo")
-
 app = FastAPI(title="Vocabserver", version="0.0.1", openapi_tags=tags_metadata)
 initialisation.init(False)
 
 jwt_authentication = JWTAuthentication(secret=SECRET, lifetime_seconds=3600, tokenUrl="/api/v1/auth/jwt/login")
-jwt_stay_auth = JWTAuthentication(secret=SECRET, lifetime_seconds=1209600, tokenUrl="/api/v1/auth/jwt/stay-login")
+#jwt_stay_auth = JWTAuthentication(secret=SECRET, lifetime_seconds=1209600, tokenUrl="/api/v1/auth/jwt/stay-login")
 
 fastapi_users = auth.FastAPIUsers(auth.user_db, [jwt_authentication], User, auth.UserCreate, auth.UserUpdate,
                                   auth.UserDB, )
 app.include_router(fastapi_users.get_auth_router(jwt_authentication), prefix="/api/v1/auth/jwt", tags=["auth"])
-app.include_router(fastapi_users.get_auth_router(jwt_stay_auth), prefix="/api/v1/auth/jwt-stay", tags=["auth"])
+#app.include_router(fastapi_users.get_auth_router(jwt_stay_auth), prefix="/api/v1/auth/jwt-stay", tags=["auth"])
 app.include_router(fastapi_users.get_register_router(auth.on_after_register), prefix="/api/v1/auth", tags=["auth"])
 app.include_router(
     fastapi_users.get_reset_password_router(SECRET, after_forgot_password=auth.on_after_forgot_password),
@@ -94,9 +92,17 @@ async def index(verify_id: str):
 async def index(usermail: str):
     return verifymail.requestverify(usermail)
 
-@app.post("/api/v1/auth/stay-signed-id", tags=["auth"])
-async def index(loginid: str, id: str):
-    datahandler.stayloggedin(loginid, id)
+@app.post("/api/v1/auth/stay-signed-in", tags=["auth"])
+async def index(password: str, email: str, id: str):
+    datahandler.stayloggedin(password, email, id)
+
+@app.get("/api/v1/auth/get_sli_data", tags=["auth"])
+async def index(loginid: str):
+    return datahandler.get_sli_data(loginid)
+
+@app.delete("/api/v1/auth/delete_sli", tags=["auth"])
+async def index(loginid: str):
+    datahandler.delete_sli(loginid)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

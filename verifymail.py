@@ -1,4 +1,5 @@
 from config import sentry, geturl, mail
+
 sentry()
 import requests
 from email.mime.text import MIMEText
@@ -6,19 +7,21 @@ from email.mime.multipart import MIMEMultipart
 from jinja2 import Environment, FileSystemLoader
 
 
-def verify(token):
+def verify(token: str) -> None:
     headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
     r = requests.post("http://127.0.0.1:8000/api/v1/auth/verify", data='{"token": "%s"}' % token, headers=headers)
-    #r = requests.post("https://bin.muetsch.io/xgom6ya", data='{"token": "%s"}' % token, headers=headers)
-    #return r.text
-    #ic(r.text)
+    # r = requests.post("https://bin.muetsch.io/xgom6ya", data='{"token": "%s"}' % token, headers=headers)
+    # return r.text
+    # ic(r.text)
 
-def requestverify(usermail):
-    r = requests.post("http://127.0.0.1:8000/api/v1/auth/request-verify-token", data='{"email": "%s"}' % usermail.replace("%40", "@"))
+
+def requestverify(usermail: str) -> str:
+    r = requests.post("http://127.0.0.1:8000/api/v1/auth/request-verify-token",
+                      data='{"email": "%s"}' % usermail.replace("%40", "@"))
     return r.text
 
 
-def sendmail(email, token):
+def sendmail(email: str, token: str) -> None:
     import smtplib
     env = Environment(
         loader=FileSystemLoader('templates/'))
@@ -38,8 +41,7 @@ def sendmail(email, token):
         server.sendmail(mail("adress"), email, msgbody)
 
 
-
-def passwordresetmail(email, token):
+def passwordresetmail(email: str, token: str) -> None:
     import smtplib
     env = Environment(
         loader=FileSystemLoader('templates/'))

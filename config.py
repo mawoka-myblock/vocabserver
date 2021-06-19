@@ -12,44 +12,48 @@ config = configparser.ConfigParser()
 #config['DIRECTORY'] = {'Data': './data'}
 
 
-def getdatadir():
+def getdatadir() -> str:
     config.read('config.ini', encoding='utf-8-sig')
     return config["DIRECTORY"]['Data']
 
 
-def getport():
+def getport() -> int:
     config.read('config.ini', encoding='utf-8-sig')
-    return config["SERVER"]['Port']
+    return int(config["SERVER"]['Port'])
 
 
-def debug():
+def debug() -> bool:
     config.read('config.ini', encoding='utf-8-sig')
     if config["SERVER"]['Debug']:
-        return "True"
+        return True
     else:
         return False
 
 
-def passwdlength():
+def passwdlength() -> str:
     config.read('config.ini', encoding='utf-8-sig')
-    return config["SECURITY"]["Mininmal_Password_Length"]
+    return os.getenv("Mininmal_Password_Length", "8")
 
 
-def getsecret():
+def getsecret() -> str:
     config.read('config.ini', encoding='utf-8-sig')
-    if config["SECURITY"]["Secret"] == "CHANGE ME":
+    """if config["SECURITY"]["Secret"] == "CHANGE ME":
         sys.exit()
     else:
-        return config["SECURITY"]["Secret"]
+        return config["SECURITY"]["Secret"]"""
+    return os.getenv("Secret")
 
 
-def geturl():
+def geturl() -> str:
     config.read("config.ini", encoding='utf-8-sig')
-    return config["FRONTEND"]["API_Url"]
+    if os.getenv("Production", "false") == "false":
+        return f"http://{os.getenv('MAIN_URL', 'localhost:8000')}"
+    else:
+        return f"https://{os.getenv('RAILWAY_STATIC_URL', '')}"
+    #return "http://127.0.0.1:8000"
 
-def getdb(arg):
+def getdb(arg: str) -> str:
     os.getenv("CouchDB_USERNAME", "admin")
-
     config.read("config.ini", encoding='utf-8-sig')
     if arg == "uname":
         return os.getenv("CouchDB_USERNAME", "admin")
@@ -60,6 +64,12 @@ def getdb(arg):
     else:
         print("Wrong Arg")
         exit()
+
+def get_db_connection_str() -> str:
+    #return os.getenv("Connection_string")
+    return os.getenv("MONGO_URL", "")
+    #return "mongodb+srv://LocalUser:e0qHZbe6VU1OsFJf@cluster0.yi3xs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+
 
 def get_sentry_url():
     config.read("config.ini", encoding='utf-8-sig')
@@ -80,19 +90,22 @@ def sentry():
     )"""
     pass
 
-def mail(thing):
+def mail(thing: str):
     config.read("config.ini", encoding='utf-8-sig')
     if thing == "adress":
-        return config["MAIL"]["Mailadress"]
+        return os.getenv("MAILADRESS", "")
     elif thing == "password":
-        return config["MAIL"]["Password"]
+        return os.getenv("MAIL_PASSWORD")
     elif thing == "username":
-        return config["MAIL"]["username"]
+        return os.getenv("MAILADRESS", "")
     elif thing == "serveradress":
-        return config["MAIL"]["serveradress"]
+        return os.getenv("MAIL_SERVER_ADRESS", "")
     elif thing == "port":
-        return int(config["MAIL"]["port"])
+        return int(os.getenv("MAIL_SERVER_PORT", ""))
     else:
         print("You Idiot!")
+
+def get_db_name() -> str:
+    return os.getenv("DB_NAME", "vocabserver")
 
 
