@@ -32,6 +32,7 @@ def login():
         """)
         global token
         login_id = eval_js("localStorage.getItem('login_id')")
+        ic(login_id)
         if login_id is None:
             login_fields = input_group("Bitte einloggen!",
                                        [input("Deine E-Mail-Adresse", name="mail", placeholder="hans@wurst.com", required=True),
@@ -98,7 +99,7 @@ def login():
                 encryption_key = eval_js("localStorage.getItem('encryption_key')")
                 global classroom
                 classroom = eval_js("localStorage.getItem('classlevel')")
-                r = requests.get(f"{geturl()}/api/v1/get_sli_data", params={"loginid": login_id})
+                r = requests.get(f"{geturl()}/api/v1/auth/get_sli_data", params={"loginid": login_id})
                 doc = r.json()
                 key = encryption_key.encode("ascii")
                 cipher_suite = Fernet(key)
