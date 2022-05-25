@@ -25,7 +25,7 @@ passlib==1.7.4
 pycparser==2.20
 pydantic==1.8
 Pygments==2.9.0
-PyJWT==2.0.1
+PyJWT==2.4.0
 pypika-tortoise==0.1.0
 python-multipart==0.0.5
 pytz==2020.5
